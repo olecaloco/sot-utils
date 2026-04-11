@@ -58,7 +58,7 @@ export function ChecklistUI({ type }: { type: ChecklistType }) {
 
     return (
         <div className="h-full flex items-center justify-center p-4">
-            <div className="flex flex-col bg-slate-800 rounded border border-slate-700 w-full max-w-md h-full max-h-[500px]">
+            <div className="flex flex-col bg-slate-800 rounded border border-slate-700 w-full max-w-md h-full max-h-125">
                 <ChecklistHeader title={titles[type]} />
                 <div className="flex-1 p-2 overflow-y-auto">
                     {loading ? (
