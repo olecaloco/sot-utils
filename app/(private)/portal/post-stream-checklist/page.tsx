@@ -4,9 +4,14 @@ export default async function PostStreamChecklistPage() {
     return (
         <div className="flex flex-col px-4 py-10 h-full gap-4">
             <div className="flex items-center justify-between mb-2">
-                <h1 className="text-xl font-semibold ">
-                    Post-Stream Checklist
-                </h1>
+                <div>
+                    <h1 className="text-xl font-semibold ">
+                        Post-Stream Checklist
+                    </h1>
+                    <div className="text-sm text-gray-500">
+                        Add or update checklist items
+                    </div>
+                </div>
                 <button
                     form="checklist-form"
                     type="submit"

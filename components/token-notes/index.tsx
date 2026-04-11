@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { parseInput } from "./utils";
 import Link from "next/link";
 import { ArrowLeftIcon } from "lucide-react";
+import ErrorAlert from "./ErrorAlert";
 
 export default function TokenNotesApp() {
     const [value, setValue] = useState("");
@@ -156,19 +157,8 @@ Notice: @username 💰 tipped for → menu item 🥰`}
                             </table>
                         </div>
 
-                        {/* Errors */}
                         {invalidLines.length > 0 && (
-                            <div className="rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-700">
-                                <strong className="block mb-2">
-                                    Some lines didn't match the required
-                                    template:
-                                </strong>
-                                <ul className="list-disc ml-5">
-                                    {invalidLines.map((line, i) => (
-                                        <li key={i}>{line}</li>
-                                    ))}
-                                </ul>
-                            </div>
+                            <ErrorAlert lines={invalidLines} />
                         )}
                     </div>
                 </div>
