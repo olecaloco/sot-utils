@@ -37,7 +37,7 @@ export default function TokenNotesApp() {
     const filteredRows = useMemo(() => {
         if (!search) return rows;
 
-        const s = search.toLowerCase();
+        const s = search.toLowerCase().trim();
 
         return rows.filter(
             (r) =>
@@ -73,7 +73,7 @@ export default function TokenNotesApp() {
 
     return (
         <main className="h-full flex items-center justify-center p-4">
-            <div className="flex flex-col bg-slate-800 rounded border border-slate-700 w-full max-w-3xl h-full max-h-125">
+            <div className="flex flex-col bg-slate-800 rounded border border-slate-700 w-full max-w-400 h-full max-h-200">
                 <div className="flex items-center gap-2 p-2 border-b border-slate-700">
                     <Link href="/">
                         <ArrowLeftIcon className="w-6 h-6 text-gray-500" />
@@ -108,7 +108,7 @@ Notice: @username 💰 tipped for → menu item 🥰`}
                         </div>
 
                         {/* Table */}
-                        <div className="flex-1 border border-slate-700 rounded-lg overflow-hidden max-h-124 overflow-y-auto">
+                        <div className="flex-1 border border-slate-700 rounded-lg overflow-hidden overflow-y-auto">
                             <table className="w-full text-sm">
                                 <thead className="text-left">
                                     <tr>
@@ -136,7 +136,7 @@ Notice: @username 💰 tipped for → menu item 🥰`}
                                         filteredRows.map((row) => (
                                             <tr
                                                 key={row.user}
-                                                className="border-t border-t-slate-800 hover:bg-slate-900"
+                                                className="border-t border-t-slate-700 hover:bg-slate-900"
                                             >
                                                 <td className="px-4 py-2">
                                                     {row.user}
@@ -165,8 +165,9 @@ Notice: @username 💰 tipped for → menu item 🥰`}
 
                 <div className="flex justify-end p-2 border-t border-slate-700">
                     <button
-                        className="bg-slate-700 hover:bg-slate-900 text-white py-2 px-4 rounded cursor-pointer"
+                        className="bg-slate-700 hover:bg-slate-900 disabled:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed text-white py-2 px-4 rounded cursor-pointer"
                         onClick={exportCSV}
+                        disabled={filteredRows.length === 0}
                     >
                         Export CSV
                     </button>

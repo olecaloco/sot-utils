@@ -1,4 +1,31 @@
-export type ChecklistType = "prestream" | "poststream";
+export const ChecklistType = {
+  TeamPrestream: "team_prestream",
+  ModelPrestream: "model_prestream",
+  TeamPoststream: "team_poststream",
+  ModelPoststream: "model_poststream",
+  TraineeStreamPrep: "trainee_stream_prep",
+  TraineeTeamPrestream: "trainee_team_prestream",
+  TraineeModelPrestream: "trainee_model_prestream",
+  TraineeDuringStream: "trainee_during_stream",
+  TraineePoststream: "trainee_poststream",
+} as const;
+
+export const RegularChecklistTypes = [
+  ChecklistType.TeamPrestream,
+  ChecklistType.ModelPrestream,
+  ChecklistType.TeamPoststream,
+  ChecklistType.ModelPoststream,
+] as const;
+
+export const TraineeChecklistTypes = [
+  ChecklistType.TraineeStreamPrep,
+  ChecklistType.TraineeTeamPrestream,
+  ChecklistType.TraineeModelPrestream,
+  ChecklistType.TraineeDuringStream,
+  ChecklistType.TraineePoststream,
+] as const;
+
+export type ChecklistType = typeof ChecklistType[keyof typeof ChecklistType];
 
 export interface ChecklistItem {
     text: string;

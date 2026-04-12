@@ -10,10 +10,16 @@ import { UtilCard } from "@/components/common/UtilCard";
 
 export default function Home() {
     return (
-        <div className="px-4 h-full flex flex-col items-center justify-center gap-6">
+        <div className="px-4 pt-10 md:pt-0 h-full flex flex-col items-center md:justify-center gap-6">
             <h1 className="text-4xl font-bold text-white">SOT Utils</h1>
 
             <div className="flex flex-col md:flex-row gap-3">
+                <UtilCard
+                    title="Trainee Checklists"
+                    description="Checklists for the newbies"
+                    href="/trainee-checklists"
+                    icon={<PlayIcon className="w-6 h-6" />}
+                />
                 <UtilCard
                     title="Pre-stream checklist"
                     description="Manage your pre-stream checklist for pasting into Slack"

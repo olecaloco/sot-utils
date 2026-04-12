@@ -1,0 +1,182 @@
+"use client";
+
+import { Checklist, ChecklistType } from "@/interfaces/Checklist";
+import { ChecklistHeader } from "./header";
+import { useEffect, useState } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "@/lib/firebase-client";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
+import { cn } from "@/utils";
+
+const tabTitles: Record<ChecklistType, string> = {
+    team_prestream: "Team",
+    model_prestream: "Model",
+    team_poststream: "Team",
+    model_poststream: "Model",
+    trainee_stream_prep: "Stream Prep",
+    trainee_team_prestream: "Team Pre-Stream",
+    trainee_during_stream: "During Stream",
+    trainee_model_prestream: "Model Pre-Stream",
+    trainee_poststream: "Post-Stream",
+};
+
+export function MultiTabbedChecklist({
+    title,
+    types,
+}: {
+    title: string;
+    types: ChecklistType[];
+}) {
+    const [loadingChecklists, setLoadingChecklists] = useState<
+        Record<ChecklistType, boolean>
+    >(
+        Object.fromEntries(types.map((t) => [t, true])) as Record<
+            ChecklistType,
+            boolean
+        >,
+    );
+
+    const [loadingTemplates, setLoadingTemplates] = useState<
+        Record<ChecklistType, boolean>
+    >(
+        Object.fromEntries(types.map((t) => [t, true])) as Record<
+            ChecklistType,
+            boolean
+        >,
+    );
+
+    const [templates, setTemplates] = useState<Record<ChecklistType, string>>(
+        {} as Record<ChecklistType, string>,
+    );
+    const [activeType, setActiveType] = useState<ChecklistType>(types[0]);
+    const [checklists, setChecklists] = useState<
+        Record<ChecklistType, Checklist["items"]>
+    >({} as Record<ChecklistType, Checklist["items"]>);
+
+    // Fetch Checklist items for all types
+    useEffect(() => {
+        const unsubChecklists = types.map((type) =>
+            onSnapshot(doc(db, "checklists", type), (snapshot) => {
+                setLoadingChecklists((prev) => ({ ...prev, [type]: false }));
+
+                if (!snapshot.exists()) {
+                    setChecklists((prev) => ({ ...prev, [type]: [] }));
+                    return;
+                }
+
+                const data = snapshot.data() as Checklist;
+                setChecklists((prev) => ({ ...prev, [type]: data.items }));
+            }),
+        );
+
+        return () => {
+            unsubChecklists.forEach((unsub) => unsub());
+        };
+    }, []);
+
+    // Fetch templates for all types
+    useEffect(() => {
+        const unsubTemplates = types.map((type) =>
+            onSnapshot(doc(db, "checklistTemplate", type), (snapshot) => {
+                setLoadingTemplates((prev) => ({ ...prev, [type]: false }));
+
+                if (!snapshot.exists()) {
+                    setTemplates((prev) => ({ ...prev, [type]: "" }));
+                    return;
+                }
+
+                const data = snapshot.data() as { content: string };
+                setTemplates((prev) => ({ ...prev, [type]: data.content }));
+            }),
+        );
+
+        return () => {
+            unsubTemplates.forEach((unsub) => unsub());
+        };
+    }, []);
+
+    const handleCheckChange = (checked: boolean, index: number) => {
+        setChecklists((prev) => {
+            const newChecklist = [...prev[activeType]];
+            newChecklist[index].checked = checked;
+            return { ...prev, [activeType]: newChecklist };
+        });
+    };
+
+    const handleCopy = async (): Promise<void> => {
+        const checklistItems = checklists[activeType]
+            .map((item) => `${item.checked ? "✅" : "❌"} ${item.text}`)
+            .join("\n");
+
+        let clipboardText = templates[activeType] || "{items}";
+        clipboardText = clipboardText.replace("{items}", checklistItems);
+
+        await navigator.clipboard.writeText(clipboardText);
+        toast.success("Checklist data is ready to paste!");
+    };
+
+    const loading =
+        Object.values(loadingChecklists).some((v) => v) &&
+        Object.values(loadingTemplates).some((v) => v);
+
+    return (
+        <div className="h-full flex items-center justify-center p-4">
+            <div className="flex flex-col bg-slate-800 rounded border border-slate-700 w-full min-w-md max-w-4xl h-full max-h-125">
+                <ChecklistHeader title={title} />
+
+                <div className="flex justify-evenly w-full">
+                    {types.map((type, index) => (
+                        <button
+                            key={type}
+                            className={cn(
+                                "flex items-center justify-center w-full p-2 border border-t-0 border-l-0 border-slate-700 cursor-pointer",
+                                {
+                                    "border-l-0": index == 0,
+                                    "border-r-0": index == types.length - 1,
+                                    "bg-slate-700": activeType === type,
+                                },
+                            )}
+                            onClick={() => setActiveType(type)}
+                        >
+                            {tabTitles[type]}
+                        </button>
+                    ))}
+                </div>
+                <div className="flex-1 p-2 overflow-y-auto">
+                    {loading && <p className="text-gray-500">Loading...</p>}
+                    {!loading && checklists[activeType] && (
+                        <ul className="space-y-2">
+                            {checklists[activeType].map((item, index) => (
+                                <li key={index}>
+                                    <label className="inline-flex items-center gap-2 cursor-pointer">
+                                        <Checkbox
+                                            className="dark"
+                                            checked={item.checked}
+                                            value={item.text}
+                                            onCheckedChange={(checked) =>
+                                                handleCheckChange(
+                                                    checked,
+                                                    index,
+                                                )
+                                            }
+                                        />
+                                        {item.text}
+                                    </label>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+                <div className="flex justify-end p-2 border-t border-slate-700">
+                    <button
+                        className="bg-slate-700 hover:bg-slate-900 text-white py-2 px-4 rounded cursor-pointer"
+                        onClick={handleCopy}
+                    >
+                        Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}

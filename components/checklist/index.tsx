@@ -5,22 +5,37 @@ import { ChecklistHeader } from "./header";
 import { useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase-client";
-import { Checkbox } from "../ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
-const titles = {
-    prestream: "Pre-Stream Checklist",
-    poststream: "Post-Stream Checklist",
+const titles: Record<ChecklistType, string> = {
+    team_prestream: "Pre-Stream Checklist",
+    model_prestream: "Model Pre-Stream Checklist",
+    team_poststream: "Post-Stream Checklist",
+    model_poststream: "Model Post-Stream Checklist",
+    trainee_stream_prep: "Trainee Stream Prep Checklist",
+    trainee_team_prestream: "Trainee Team Pre-Stream Checklist",
+    trainee_during_stream: "Trainee During Stream Checklist",
+    trainee_model_prestream: "Trainee Model Pre-Stream Checklist",
+    trainee_poststream: "Trainee Post-Stream Checklist",
 };
 
-const template = `{title}
-
-{items}
-`;
-
 export function ChecklistUI({ type }: { type: ChecklistType }) {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [checklist, setChecklist] = useState<Checklist["items"]>([]);
+    const [template, setTemplate] = useState<string>("");
+
+    useEffect(() => {
+        onSnapshot(doc(db, "checklistTemplate", type), (snapshot) => {
+            if (!snapshot.exists()) {
+                setTemplate("");
+                return;
+            }
+
+            const data = snapshot.data() as { content: string };
+            setTemplate(data.content);
+        });
+    }, [type]);
 
     useEffect(() => {
         onSnapshot(doc(db, "checklists", type), (snapshot) => {
@@ -91,7 +106,7 @@ export function ChecklistUI({ type }: { type: ChecklistType }) {
                         className="bg-slate-700 hover:bg-slate-900 text-white py-2 px-4 rounded cursor-pointer"
                         onClick={handleCopy}
                     >
-                        Generate Slack message
+                        Copy
                     </button>
                 </div>
             </div>

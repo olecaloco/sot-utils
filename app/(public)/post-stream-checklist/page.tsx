@@ -1,5 +1,10 @@
-import { ChecklistUI } from "@/components/checklist";
+import { MultiTabbedChecklist } from "@/components/checklist/multi";
 
 export default async function PostStreamChecklistPage() {
-    return <ChecklistUI type="poststream" />;
+    return (
+        <MultiTabbedChecklist
+            title="Post-Stream Checklists"
+            types={["team_poststream", "model_poststream"]}
+        />
+    );
 }

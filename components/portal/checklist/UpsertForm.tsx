@@ -15,6 +15,7 @@ interface UpsertFormProps {
 }
 
 export default function UpsertForm(props: UpsertFormProps) {
+    const [loading, setLoading] = useState(true);
     const [items, setItems] = useState<Checklist["items"]>([
         { text: "", checked: false },
     ]);
@@ -30,6 +31,8 @@ export default function UpsertForm(props: UpsertFormProps) {
                 if (data) {
                     setItems(data.items);
                 }
+
+                setLoading(false);
             },
         );
 
@@ -141,32 +144,35 @@ export default function UpsertForm(props: UpsertFormProps) {
     return (
         <div className="flex flex-col h-full">
             <form id="checklist-form" onSubmit={handleSubmit}>
-                {items.map((item, index) => (
-                    <div
-                        key={index}
-                        className="group flex items-center py-1 border-y border-transparent hover:border-gray-800 focus-within:border-gray-800 transition"
-                    >
-                        <input
-                            ref={setInputRef(index)}
-                            value={item.text}
-                            onChange={(e) =>
-                                handleChange(index, e.target.value)
-                            }
-                            onKeyDown={(e) => handleKeyDown(e, index)}
-                            placeholder="List item"
-                            className="flex-1 bg-transparent outline-none placeholder-gray-400"
-                        />
+                {loading && <p className="text-gray-500">Loading...</p>}
 
-                        <button
-                            type="button"
-                            onClick={() => deleteItem(index)}
-                            className="ml-2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100
-                 text-gray-400 hover:text-red-500 transition"
+                {!loading &&
+                    items.map((item, index) => (
+                        <div
+                            key={index}
+                            className="group flex items-center py-1 border-y border-transparent hover:border-gray-800 focus-within:border-gray-800 transition"
                         >
-                            <XIcon className="w-5 h-5" />
-                        </button>
-                    </div>
-                ))}
+                            <input
+                                ref={setInputRef(index)}
+                                value={item.text}
+                                onChange={(e) =>
+                                    handleChange(index, e.target.value)
+                                }
+                                onKeyDown={(e) => handleKeyDown(e, index)}
+                                placeholder="List item"
+                                className="flex-1 bg-transparent outline-none placeholder-gray-400"
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() => deleteItem(index)}
+                                className="ml-2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100
+                 text-gray-400 hover:text-red-500 transition"
+                            >
+                                <XIcon className="w-5 h-5" />
+                            </button>
+                        </div>
+                    ))}
             </form>
 
             <button
