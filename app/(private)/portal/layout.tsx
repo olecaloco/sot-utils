@@ -7,11 +7,11 @@ export default function PortalLayout({
     return (
         <div className="flex h-full flex-col">
             <PortalHeader />
-            <div className="flex flex-1 container mx-auto">
+            <div className="flex flex-1 container mx-auto overflow-hidden">
                 <aside className="pt-10 border-r border-gray-800 w-60 shrink-0">
                     <PortalNavigation />
                 </aside>
-                <main className="flex-1">{children}</main>
+                <main className="flex-1 overflow-hidden">{children}</main>
             </div>
         </div>
     );
