@@ -6,6 +6,9 @@ export const ChecklistType = {
   TraineeStreamPrep: "trainee_stream_prep",
   TraineeTeamPrestream: "trainee_team_prestream",
   TraineeModelPrestream: "trainee_model_prestream",
+  TraineeCBPrestream: "trainee_cb_prestream",
+  TraineeMTSPrestream: "trainee_mts_prestream",
+  TraineePhonePrestream: "trainee_phone_prestream",
   TraineeDuringStream: "trainee_during_stream",
   TraineePoststream: "trainee_poststream",
 } as const;
@@ -21,6 +24,9 @@ export const TraineeChecklistTypes = [
   ChecklistType.TraineeStreamPrep,
   ChecklistType.TraineeTeamPrestream,
   ChecklistType.TraineeModelPrestream,
+  ChecklistType.TraineeCBPrestream,
+  ChecklistType.TraineeMTSPrestream,
+  ChecklistType.TraineePhonePrestream,
   ChecklistType.TraineeDuringStream,
   ChecklistType.TraineePoststream,
 ] as const;

@@ -45,6 +45,18 @@ const TRAINEE_LINKS = [
         label: "Trainee Model Pre-stream",
     },
     {
+        href: "/portal/trainee/cb-prestream",
+        label: "Trainee CB Pre-stream",
+    },
+    {
+        href: "/portal/trainee/mts-prestream",
+        label: "Trainee MTS Pre-stream",
+    },
+    {
+        href: "/portal/trainee/phone-prestream",
+        label: "Trainee Phone Pre-stream",
+    },
+    {
         href: "/portal/trainee/during-stream",
         label: "Trainee During Stream",
     },

@@ -18,6 +18,9 @@ const tabTitles: Record<ChecklistType, string> = {
     trainee_team_prestream: "Team Pre-Stream",
     trainee_during_stream: "During Stream",
     trainee_model_prestream: "Model Pre-Stream",
+    trainee_cb_prestream: "CB Pre-Stream",
+    trainee_mts_prestream: "MTS Pre-Stream",
+    trainee_phone_prestream: "Phone Pre-Stream",
     trainee_poststream: "Post-Stream",
 };
 
@@ -122,52 +125,58 @@ export function MultiTabbedChecklist({
 
     return (
         <div className="h-full flex items-center justify-center p-4">
-            <div className="flex flex-col bg-slate-800 rounded border border-slate-700 w-full min-w-md max-w-4xl h-full max-h-125">
+            <div className="flex flex-col bg-slate-800 rounded border border-slate-700 w-full max-w-5xl h-full max-h-125">
                 <ChecklistHeader title={title} />
 
-                <div className="flex justify-evenly w-full">
-                    {types.map((type, index) => (
-                        <button
-                            key={type}
-                            className={cn(
-                                "flex items-center justify-center w-full p-2 border border-t-0 border-l-0 border-slate-700 cursor-pointer",
-                                {
-                                    "border-l-0": index == 0,
-                                    "border-r-0": index == types.length - 1,
-                                    "bg-slate-700": activeType === type,
-                                },
-                            )}
-                            onClick={() => setActiveType(type)}
-                        >
-                            {tabTitles[type]}
-                        </button>
-                    ))}
+                <div className="flex flex-1 min-h-0">
+                    <div className="flex flex-col h-full min-w-50 border-r border-slate-700 overflow-y-auto">
+                        {types.map((type, index) => (
+                            <button
+                                key={type}
+                                className={cn(
+                                    "block p-2 border border-t-0 border-x-0 border-slate-700 hover:bg-slate-700 cursor-pointer transition",
+                                    {
+                                        "bg-slate-700": activeType === type,
+                                    },
+                                )}
+                                onClick={() => setActiveType(type)}
+                            >
+                                {tabTitles[type]}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="flex-1 p-2 overflow-y-auto">
+                        {loading && <p className="text-gray-500">Loading...</p>}
+                        {!loading && checklists[activeType] && (
+                            <ul className="space-y-2">
+                                {checklists[activeType].length === 0 && (
+                                    <p className="text-gray-500">
+                                        No items found.
+                                    </p>
+                                )}
+                                {checklists[activeType].map((item, index) => (
+                                    <li key={index}>
+                                        <label className="inline-flex items-center gap-2 cursor-pointer">
+                                            <Checkbox
+                                                className="dark"
+                                                checked={item.checked}
+                                                value={item.text}
+                                                onCheckedChange={(checked) =>
+                                                    handleCheckChange(
+                                                        checked,
+                                                        index,
+                                                    )
+                                                }
+                                            />
+                                            {item.text}
+                                        </label>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
                 </div>
-                <div className="flex-1 p-2 overflow-y-auto">
-                    {loading && <p className="text-gray-500">Loading...</p>}
-                    {!loading && checklists[activeType] && (
-                        <ul className="space-y-2">
-                            {checklists[activeType].map((item, index) => (
-                                <li key={index}>
-                                    <label className="inline-flex items-center gap-2 cursor-pointer">
-                                        <Checkbox
-                                            className="dark"
-                                            checked={item.checked}
-                                            value={item.text}
-                                            onCheckedChange={(checked) =>
-                                                handleCheckChange(
-                                                    checked,
-                                                    index,
-                                                )
-                                            }
-                                        />
-                                        {item.text}
-                                    </label>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
+
                 <div className="flex justify-end p-2 border-t border-slate-700">
                     <button
                         className="bg-slate-700 hover:bg-slate-900 text-white py-2 px-4 rounded cursor-pointer"

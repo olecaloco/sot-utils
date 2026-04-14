@@ -20,6 +20,9 @@ const labels: Record<ChecklistType, string> = {
     trainee_team_prestream: "Trainee Team Pre-Stream",
     trainee_during_stream: "Trainee During Stream",
     trainee_model_prestream: "Trainee Model Pre-Stream",
+    trainee_cb_prestream: "Trainee CB Pre-Stream",
+    trainee_mts_prestream: "Trainee MTS Pre-Stream",
+    trainee_phone_prestream: "Trainee Phone Pre-Stream",
     trainee_poststream: "Trainee Post-Stream",
 };
 
@@ -47,6 +50,9 @@ export const ChecklistTemplateForm = ({
         trainee_team_prestream: defaultTemplates(),
         trainee_during_stream: defaultTemplates(),
         trainee_model_prestream: defaultTemplates(),
+        trainee_cb_prestream: defaultTemplates(),
+        trainee_mts_prestream: defaultTemplates(),
+        trainee_phone_prestream: defaultTemplates(),
         trainee_poststream: defaultTemplates(),
     });
 
@@ -86,6 +92,9 @@ export const ChecklistTemplateForm = ({
         if (type === "regular") {
             delete contentsToSave.trainee_during_stream;
             delete contentsToSave.trainee_model_prestream;
+            delete contentsToSave.trainee_cb_prestream;
+            delete contentsToSave.trainee_mts_prestream;
+            delete contentsToSave.trainee_phone_prestream;
             delete contentsToSave.trainee_poststream;
             delete contentsToSave.trainee_team_prestream;
             delete contentsToSave.trainee_stream_prep;
