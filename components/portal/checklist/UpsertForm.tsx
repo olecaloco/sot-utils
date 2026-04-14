@@ -142,7 +142,7 @@ export default function UpsertForm(props: UpsertFormProps) {
     };
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full overflow-y-auto">
             <form id="checklist-form" onSubmit={handleSubmit}>
                 {loading && <p className="text-gray-500">Loading...</p>}
 
@@ -150,7 +150,7 @@ export default function UpsertForm(props: UpsertFormProps) {
                     items.map((item, index) => (
                         <div
                             key={index}
-                            className="group flex items-center py-1 border-y border-transparent hover:border-gray-800 focus-within:border-gray-800 transition"
+                            className="pr-5 group flex items-center py-1 border-y border-transparent hover:border-gray-800 focus-within:border-gray-800 transition"
                         >
                             <input
                                 ref={setInputRef(index)}
