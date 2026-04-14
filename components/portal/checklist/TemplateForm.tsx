@@ -16,14 +16,14 @@ const labels: Record<ChecklistType, string> = {
     model_prestream: "Model Pre-Stream",
     team_poststream: "Team Post-Stream",
     model_poststream: "Model Post-Stream",
-    trainee_stream_prep: "Trainee Stream Prep",
-    trainee_team_prestream: "Trainee Team Pre-Stream",
-    trainee_during_stream: "Trainee During Stream",
-    trainee_model_prestream: "Trainee Model Pre-Stream",
-    trainee_cb_prestream: "Trainee CB Pre-Stream",
-    trainee_mts_prestream: "Trainee MTS Pre-Stream",
-    trainee_phone_prestream: "Trainee Phone Pre-Stream",
-    trainee_poststream: "Trainee Post-Stream",
+    trainee_stream_prep: "Stream Prep",
+    trainee_team_prestream: "Team Pre-Stream",
+    trainee_during_stream: "During Stream",
+    trainee_model_prestream: "Model Pre-Stream",
+    trainee_cb_prestream: "CB Pre-Stream",
+    trainee_mts_prestream: "MTS Pre-Stream",
+    trainee_phone_prestream: "Phone Pre-Stream",
+    trainee_poststream: "Post-Stream",
 };
 
 const defaultTemplates = () => {
