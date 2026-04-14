@@ -70,7 +70,7 @@ export function PortalNavigation() {
     const pathname = usePathname();
 
     return (
-        <nav className="sticky top-25.25 z-10">
+        <nav>
             <ul className="flex flex-col gap-1">
                 <li className="text-sm font-semibold mb-2 text-gray-200 uppercase">
                     <span>General</span>
