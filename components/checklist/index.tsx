@@ -17,6 +17,9 @@ const titles: Record<ChecklistType, string> = {
     trainee_team_prestream: "Trainee Team Pre-Stream Checklist",
     trainee_during_stream: "Trainee During Stream Checklist",
     trainee_model_prestream: "Trainee Model Pre-Stream Checklist",
+    trainee_cb_prestream: "Trainee CB Pre-Stream Checklist",
+    trainee_mts_prestream: "Trainee MTS Pre-Stream Checklist",
+    trainee_phone_prestream: "Trainee Phone Pre-Stream Checklist",
     trainee_poststream: "Trainee Post-Stream Checklist",
 };
 

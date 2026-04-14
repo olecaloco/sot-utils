@@ -10,15 +10,13 @@ export default async function TraineeChecklistPage() {
                     "trainee_stream_prep",
                     "trainee_team_prestream",
                     "trainee_model_prestream",
+                    "trainee_cb_prestream",
+                    "trainee_mts_prestream",
+                    "trainee_phone_prestream",
                     "trainee_during_stream",
                     "trainee_poststream",
                 ]}
             />
-            {/* <ChecklistUI type="trainee_stream_prep" />
-            <ChecklistUI type="trainee_team_prestream" />
-            <ChecklistUI type="trainee_model_prestream" />
-            <ChecklistUI type="trainee_during_stream" />
-            <ChecklistUI type="trainee_poststream" /> */}
         </>
     );
 }
