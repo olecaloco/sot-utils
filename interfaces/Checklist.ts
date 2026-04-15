@@ -10,6 +10,7 @@ export const ChecklistType = {
   TraineeMTSPrestream: "trainee_mts_prestream",
   TraineePhonePrestream: "trainee_phone_prestream",
   TraineeDuringStream: "trainee_during_stream",
+  TraineeTroubleshooting: "trainee_troubleshooting",
   TraineePoststream: "trainee_poststream",
 } as const;
 
@@ -28,6 +29,7 @@ export const TraineeChecklistTypes = [
   ChecklistType.TraineeMTSPrestream,
   ChecklistType.TraineePhonePrestream,
   ChecklistType.TraineeDuringStream,
+  ChecklistType.TraineeTroubleshooting,
   ChecklistType.TraineePoststream,
 ] as const;
 

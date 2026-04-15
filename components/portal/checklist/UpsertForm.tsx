@@ -3,10 +3,9 @@
 import { Checklist, ChecklistType } from "@/interfaces/Checklist";
 import { db } from "@/lib/firebase-client";
 import { upsertChecklist } from "@/services/checklist";
-import { cn } from "@/utils";
 import { doc, onSnapshot } from "firebase/firestore";
-import { PlusIcon, X, XIcon } from "lucide-react";
-import { ChangeEvent, SubmitEvent, useEffect, useRef, useState } from "react";
+import { PlusIcon, XIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface UpsertFormProps {

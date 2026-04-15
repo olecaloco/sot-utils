@@ -21,6 +21,7 @@ const tabTitles: Record<ChecklistType, string> = {
     trainee_cb_prestream: "CB Pre-Stream",
     trainee_mts_prestream: "MTS Pre-Stream",
     trainee_phone_prestream: "Phone Pre-Stream",
+    trainee_troubleshooting: "Troubleshooting",
     trainee_poststream: "Post-Stream",
 };
 
