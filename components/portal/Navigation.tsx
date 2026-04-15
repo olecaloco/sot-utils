@@ -57,6 +57,10 @@ const TRAINEE_LINKS = [
         label: "Trainee Phone Pre-stream",
     },
     {
+        href: "/portal/trainee/troubleshooting",
+        label: "Trainee Troubleshooting",
+    },
+    {
         href: "/portal/trainee/during-stream",
         label: "Trainee During Stream",
     },
