@@ -3,25 +3,24 @@
 import { Checklist, ChecklistType } from "@/interfaces/Checklist";
 import { ChecklistHeader } from "./header";
 import { useEffect, useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase-client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
 const titles: Record<ChecklistType, string> = {
-    team_prestream: "Pre-Stream Checklist",
-    model_prestream: "Model Pre-Stream Checklist",
-    team_poststream: "Post-Stream Checklist",
-    model_poststream: "Model Post-Stream Checklist",
-    trainee_stream_prep: "Trainee Stream Prep Checklist",
-    trainee_team_prestream: "Trainee Team Pre-Stream Checklist",
-    trainee_during_stream: "Trainee During Stream Checklist",
-    trainee_model_prestream: "Trainee Model Pre-Stream Checklist",
-    trainee_cb_prestream: "Trainee CB Pre-Stream Checklist",
-    trainee_mts_prestream: "Trainee MTS Pre-Stream Checklist",
-    trainee_phone_prestream: "Trainee Phone Pre-Stream Checklist",
+    team_prestream: "Pre-Stream",
+    model_prestream: "Model Pre-Stream",
+    poststream: "Post-stream",
+    trainee_stream_prep: "Trainee Stream Prep",
+    trainee_team_prestream: "Trainee Team Pre-Stream",
+    trainee_during_stream: "Trainee During Stream",
+    trainee_model_prestream: "Trainee Model Pre-Stream",
+    trainee_cb_prestream: "Trainee CB Pre-Stream",
+    trainee_mts_prestream: "Trainee MTS Pre-Stream",
+    trainee_phone_prestream: "Trainee Phone Pre-Stream",
     trainee_troubleshooting: "Trainee Troubleshooting",
-    trainee_poststream: "Trainee Post-Stream Checklist",
+    trainee_poststream: "Trainee Post-Stream",
 };
 
 export function ChecklistUI({ type }: { type: ChecklistType }) {
@@ -30,29 +29,54 @@ export function ChecklistUI({ type }: { type: ChecklistType }) {
     const [template, setTemplate] = useState<string>("");
 
     useEffect(() => {
-        onSnapshot(doc(db, "checklistTemplate", type), (snapshot) => {
-            if (!snapshot.exists()) {
-                setTemplate("");
-                return;
-            }
+        const fetchChecklistTemplate = async () => {
+            try {
+                const docSnap = await getDoc(
+                    doc(db, "checklistTemplate", type),
+                );
+                if (!docSnap.exists()) {
+                    setTemplate("");
+                    return;
+                }
 
-            const data = snapshot.data() as { content: string };
-            setTemplate(data.content);
-        });
+                const data = docSnap.data() as { content: string };
+                setTemplate(data.content);
+            } catch (error) {
+                setLoading(false);
+                console.error(error);
+                toast.error(
+                    `Something went wrong fetching ${titles[type]} template`,
+                );
+            }
+        };
+
+        void fetchChecklistTemplate();
     }, [type]);
 
     useEffect(() => {
-        onSnapshot(doc(db, "checklists", type), (snapshot) => {
-            if (!snapshot.exists()) {
-                setLoading(false);
-                setChecklist([]);
-                return;
-            }
+        const fetchChecklist = async () => {
+            try {
+                const docSnap = await getDoc(doc(db, "checklists", type));
 
-            const data = snapshot.data() as Checklist;
-            setChecklist(data.items);
-            setLoading(false);
-        });
+                if (!docSnap.exists()) {
+                    setLoading(false);
+                    setChecklist([]);
+                    return;
+                }
+
+                const data = docSnap.data() as Checklist;
+                setChecklist(data.items);
+                setLoading(false);
+            } catch (error) {
+                setLoading(false);
+                console.error(error);
+                toast.error(
+                    `Something went wrong fetching ${titles[type]} checklist`,
+                );
+            }
+        };
+
+        void fetchChecklist();
     }, []);
 
     const handleCheckChange = (checked: boolean, index: number) => {

@@ -12,19 +12,18 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const labels: Record<ChecklistType, string> = {
-    team_prestream: "Team Pre-Stream",
-    model_prestream: "Model Pre-Stream",
-    team_poststream: "Team Post-Stream",
-    model_poststream: "Model Post-Stream",
+    team_prestream: "Team Pre-stream",
+    model_prestream: "Model Pre-stream",
+    poststream: "Post-stream",
     trainee_stream_prep: "Stream Prep",
-    trainee_team_prestream: "Team Pre-Stream",
+    trainee_team_prestream: "Team Pre-stream",
     trainee_during_stream: "During Stream",
-    trainee_model_prestream: "Model Pre-Stream",
-    trainee_cb_prestream: "CB Pre-Stream",
-    trainee_mts_prestream: "MTS Pre-Stream",
-    trainee_phone_prestream: "Phone Pre-Stream",
+    trainee_model_prestream: "Model Pre-stream",
+    trainee_cb_prestream: "CB Pre-stream",
+    trainee_mts_prestream: "MTS Pre-stream",
+    trainee_phone_prestream: "Phone Pre-stream",
     trainee_troubleshooting: "Troubleshooting",
-    trainee_poststream: "Post-Stream",
+    trainee_poststream: "Post-stream",
 };
 
 const defaultTemplates = () => {
@@ -45,8 +44,7 @@ export const ChecklistTemplateForm = ({
     const [contents, setContents] = useState<Record<ChecklistType, string>>({
         team_prestream: defaultTemplates(),
         model_prestream: defaultTemplates(),
-        team_poststream: defaultTemplates(),
-        model_poststream: defaultTemplates(),
+        poststream: defaultTemplates(),
         trainee_stream_prep: defaultTemplates(),
         trainee_team_prestream: defaultTemplates(),
         trainee_during_stream: defaultTemplates(),

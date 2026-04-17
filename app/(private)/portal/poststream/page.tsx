@@ -1,13 +1,11 @@
 import UpsertForm from "@/components/portal/checklist/UpsertForm";
 
-export default async function TeamPostStreamChecklistPage() {
+export default async function PostStreamChecklistPage() {
     return (
         <div className="flex flex-col px-4 py-10 h-full gap-4">
             <div className="flex items-center justify-between mb-2">
                 <div>
-                    <h1 className="text-xl font-semibold ">
-                        Team Post-Stream Checklist
-                    </h1>
+                    <h1 className="text-xl font-semibold ">Post-stream</h1>
                     <div className="text-sm text-gray-500">
                         Add or update checklist items
                     </div>
@@ -20,7 +18,7 @@ export default async function TeamPostStreamChecklistPage() {
                     Save
                 </button>
             </div>
-            <UpsertForm type="team_poststream" />
+            <UpsertForm type="poststream" />
         </div>
     );
 }

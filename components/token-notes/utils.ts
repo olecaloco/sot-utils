@@ -1,5 +1,3 @@
-// utils/parser.ts
-
 export type ParsedResult = {
   usermap: Map<string, string[]>;
   invalidLines: string[];

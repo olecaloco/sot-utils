@@ -6,7 +6,7 @@ export default async function TraineeModelPreStreamChecklistPage() {
             <div className="flex items-center justify-between mb-2">
                 <div>
                     <h1 className="text-xl font-semibold ">
-                        Trainee Model Pre-Stream Checklist
+                        Trainee Model Pre-Stream
                     </h1>
                     <div className="text-sm text-gray-500">
                         Add or update checklist items

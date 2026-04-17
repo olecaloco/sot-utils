@@ -14,16 +14,12 @@ const LINKS = [
         label: "Team Pre-stream",
     },
     {
-        href: "/portal/team/post-stream-checklist",
-        label: "Team Post-stream",
-    },
-    {
         href: "/portal/model/pre-stream-checklist",
         label: "Model Pre-stream",
     },
     {
-        href: "/portal/model/post-stream-checklist",
-        label: "Model Post-stream",
+        href: "/portal/poststream",
+        label: "Post-stream",
     },
 ];
 
