@@ -3,7 +3,7 @@
 import { Checklist, ChecklistType } from "@/interfaces/Checklist";
 import { db } from "@/lib/firebase-client";
 import { upsertChecklist } from "@/services/checklist";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { PlusIcon, XIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -23,19 +23,19 @@ export default function UpsertForm(props: UpsertFormProps) {
     const pendingFocusIndex = useRef<number | null>(null);
 
     useEffect(() => {
-        const unsub = onSnapshot(
-            doc(db, "checklists", props.type),
-            (snapshot) => {
-                const data = snapshot.data() as Checklist | undefined;
-                if (data) {
+        getDoc(doc(db, "checklists", props.type))
+            .then((docSnap) => {
+                const data = docSnap.data() as Checklist | undefined;
+                if (data && data.items.length > 0) {
                     setItems(data.items);
                 }
 
                 setLoading(false);
-            },
-        );
-
-        return () => unsub();
+            })
+            .catch((error) => {
+                toast.error("Something went wrong fetching checklist");
+                console.error(error);
+            });
     }, [props.type]);
 
     const setInputRef =

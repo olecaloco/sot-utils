@@ -3,7 +3,7 @@
 import { Checklist, ChecklistType } from "@/interfaces/Checklist";
 import { ChecklistHeader } from "./header";
 import { useEffect, useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase-client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
@@ -60,44 +60,54 @@ export function MultiTabbedChecklist({
 
     // Fetch Checklist items for all types
     useEffect(() => {
-        const unsubChecklists = types.map((type) =>
-            onSnapshot(doc(db, "checklists", type), (snapshot) => {
-                setLoadingChecklists((prev) => ({ ...prev, [type]: false }));
+        const requests = types.map((type) => {
+            return getDoc(doc(db, "checklists", type))
+                .then((docSnap) => {
+                    setLoadingChecklists((prev) => ({
+                        ...prev,
+                        [type]: false,
+                    }));
 
-                if (!snapshot.exists()) {
-                    setChecklists((prev) => ({ ...prev, [type]: [] }));
-                    return;
-                }
+                    if (!docSnap.exists()) {
+                        setChecklists((prev) => ({ ...prev, [type]: [] }));
+                        return;
+                    }
 
-                const data = snapshot.data() as Checklist;
-                setChecklists((prev) => ({ ...prev, [type]: data.items }));
-            }),
-        );
+                    const data = docSnap.data() as Checklist;
+                    setChecklists((prev) => ({ ...prev, [type]: data.items }));
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        });
 
-        return () => {
-            unsubChecklists.forEach((unsub) => unsub());
-        };
+        Promise.allSettled(requests);
     }, []);
 
     // Fetch templates for all types
     useEffect(() => {
-        const unsubTemplates = types.map((type) =>
-            onSnapshot(doc(db, "checklistTemplate", type), (snapshot) => {
-                setLoadingTemplates((prev) => ({ ...prev, [type]: false }));
+        const requests = types.map((type) => {
+            return getDoc(doc(db, "checklistTemplate", type))
+                .then((docSnap) => {
+                    setLoadingTemplates((prev) => ({
+                        ...prev,
+                        [type]: false,
+                    }));
 
-                if (!snapshot.exists()) {
-                    setTemplates((prev) => ({ ...prev, [type]: "" }));
-                    return;
-                }
+                    if (!docSnap.exists()) {
+                        setTemplates((prev) => ({ ...prev, [type]: [] }));
+                        return;
+                    }
 
-                const data = snapshot.data() as { content: string };
-                setTemplates((prev) => ({ ...prev, [type]: data.content }));
-            }),
-        );
+                    const data = docSnap.data() as { content: string };
+                    setTemplates((prev) => ({ ...prev, [type]: data.content }));
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        });
 
-        return () => {
-            unsubTemplates.forEach((unsub) => unsub());
-        };
+        Promise.allSettled(requests);
     }, []);
 
     const handleCheckChange = (checked: boolean, index: number) => {
