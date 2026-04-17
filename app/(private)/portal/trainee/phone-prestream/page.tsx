@@ -6,7 +6,7 @@ export default async function TraineePhonePreStreamChecklistPage() {
             <div className="flex items-center justify-between mb-2">
                 <div>
                     <h1 className="text-xl font-semibold ">
-                        Trainee Phone Pre-Stream Checklist
+                        Trainee Phone Pre-Stream
                     </h1>
                     <div className="text-sm text-gray-500">
                         Add or update checklist items

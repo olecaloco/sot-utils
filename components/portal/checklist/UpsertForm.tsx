@@ -44,7 +44,6 @@ export default function UpsertForm(props: UpsertFormProps) {
             inputRefs.current[index] = el;
         };
 
-    // 🔥 reliable focus AFTER render
     useEffect(() => {
         if (pendingFocusIndex.current !== null) {
             inputRefs.current[pendingFocusIndex.current]?.focus();
@@ -114,7 +113,7 @@ export default function UpsertForm(props: UpsertFormProps) {
             e.preventDefault();
 
             if (items.length > 1) {
-                const nextIndex = Math.min(index, items.length - 2); // move down if possible
+                const nextIndex = Math.min(index, items.length - 2);
                 pendingFocusIndex.current = nextIndex;
 
                 setItems(items.filter((_, i) => i !== index));

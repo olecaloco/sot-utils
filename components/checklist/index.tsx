@@ -9,19 +9,18 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
 const titles: Record<ChecklistType, string> = {
-    team_prestream: "Pre-Stream Checklist",
-    model_prestream: "Model Pre-Stream Checklist",
-    team_poststream: "Post-Stream Checklist",
-    model_poststream: "Model Post-Stream Checklist",
-    trainee_stream_prep: "Trainee Stream Prep Checklist",
-    trainee_team_prestream: "Trainee Team Pre-Stream Checklist",
-    trainee_during_stream: "Trainee During Stream Checklist",
-    trainee_model_prestream: "Trainee Model Pre-Stream Checklist",
-    trainee_cb_prestream: "Trainee CB Pre-Stream Checklist",
-    trainee_mts_prestream: "Trainee MTS Pre-Stream Checklist",
-    trainee_phone_prestream: "Trainee Phone Pre-Stream Checklist",
+    team_prestream: "Pre-Stream",
+    model_prestream: "Model Pre-Stream",
+    poststream: "Post-stream",
+    trainee_stream_prep: "Trainee Stream Prep",
+    trainee_team_prestream: "Trainee Team Pre-Stream",
+    trainee_during_stream: "Trainee During Stream",
+    trainee_model_prestream: "Trainee Model Pre-Stream",
+    trainee_cb_prestream: "Trainee CB Pre-Stream",
+    trainee_mts_prestream: "Trainee MTS Pre-Stream",
+    trainee_phone_prestream: "Trainee Phone Pre-Stream",
     trainee_troubleshooting: "Trainee Troubleshooting",
-    trainee_poststream: "Trainee Post-Stream Checklist",
+    trainee_poststream: "Trainee Post-Stream",
 };
 
 export function ChecklistUI({ type }: { type: ChecklistType }) {

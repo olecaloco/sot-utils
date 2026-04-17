@@ -12,17 +12,16 @@ import { cn } from "@/utils";
 const tabTitles: Record<ChecklistType, string> = {
     team_prestream: "Team",
     model_prestream: "Model",
-    team_poststream: "Team",
-    model_poststream: "Model",
+    poststream: "Post-stream",
     trainee_stream_prep: "Stream Prep",
-    trainee_team_prestream: "Team Pre-Stream",
+    trainee_team_prestream: "Team Pre-stream",
     trainee_during_stream: "During Stream",
-    trainee_model_prestream: "Model Pre-Stream",
-    trainee_cb_prestream: "CB Pre-Stream",
-    trainee_mts_prestream: "MTS Pre-Stream",
-    trainee_phone_prestream: "Phone Pre-Stream",
+    trainee_model_prestream: "Model Pre-stream",
+    trainee_cb_prestream: "CB Pre-stream",
+    trainee_mts_prestream: "MTS Pre-stream",
+    trainee_phone_prestream: "Phone Pre-stream",
     trainee_troubleshooting: "Troubleshooting",
-    trainee_poststream: "Post-Stream",
+    trainee_poststream: "Post-stream",
 };
 
 export function MultiTabbedChecklist({

@@ -6,7 +6,7 @@ export default async function TraineeCBPreStreamChecklistPage() {
             <div className="flex items-center justify-between mb-2">
                 <div>
                     <h1 className="text-xl font-semibold ">
-                        Trainee Troubleshooting Checklist
+                        Trainee Troubleshooting
                     </h1>
                     <div className="text-sm text-gray-500">
                         Add or update checklist items
