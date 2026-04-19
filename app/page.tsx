@@ -1,17 +1,37 @@
-import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import Image from "next/image";
+
+import Stack from "@mui/material/Stack";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+
+import { Show, SignInButton } from "@clerk/nextjs";
 import {
     ArrowRightIcon,
     BadgeDollarSignIcon,
+    BookOpenIcon,
+    BotMessageSquareIcon,
     PlayIcon,
     PowerIcon,
 } from "lucide-react";
-import Link from "next/link";
-import { UtilCard } from "@/components/common/UtilCard";
-import Image from "next/image";
 
-export default function Home() {
+import { Link } from "@/components/common/Link";
+import { UtilCard } from "@/components/common/UtilCard";
+
+export default async function Home() {
     return (
-        <div className="px-4 pt-10 md:pt-0 h-full flex flex-col items-center md:justify-center gap-6">
+        <Stack
+            sx={{
+                pt: {
+                    xs: 12,
+                    sm: 12,
+                    md: 16,
+                },
+                px: 2,
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 4,
+            }}
+        >
             <Image
                 className="w-full max-w-75"
                 src="/logo.png"
@@ -20,12 +40,17 @@ export default function Home() {
                 height={534}
             />
 
-            <div className="flex flex-col md:flex-row gap-3">
+            <Grid
+                container
+                spacing={1}
+                columns={{ xs: 1, sm: 2, md: 5 }}
+                sx={{ justifyContent: "center" }}
+            >
                 <UtilCard
                     title="Trainee Checklists"
                     description="Checklists for the newbies"
                     href="/trainee-checklists"
-                    icon={<PlayIcon className="w-6 h-6" />}
+                    icon={<BookOpenIcon className="w-6 h-6" />}
                 />
                 <UtilCard
                     title="Pre-stream checklist"
@@ -45,7 +70,14 @@ export default function Home() {
                     href="/token-notes"
                     icon={<BadgeDollarSignIcon className="w-6 h-6" />}
                 />
-            </div>
+                <UtilCard
+                    title="Stream title GPT"
+                    description="AI help for your stream titles"
+                    href="https://chatgpt.com"
+                    icon={<BotMessageSquareIcon className="w-6 h-6" />}
+                    external
+                />
+            </Grid>
 
             <Show when="signed-out">
                 <SignInButton>
@@ -59,14 +91,22 @@ export default function Home() {
                 </SignInButton>
             </Show>
             <Show when="signed-in">
-                <Link
-                    className="flex items-center gap-1 text-sm underline"
+                <Button
+                    LinkComponent={Link}
                     href="/portal"
+                    endIcon={<ArrowRightIcon />}
+                    sx={{
+                        ".MuiButton-icon": {
+                            transition: "all 150ms ease-in-out",
+                        },
+                        ":hover .MuiButton-icon": {
+                            ml: 2,
+                        },
+                    }}
                 >
-                    <span>Go to Admin</span>
-                    <ArrowRightIcon className="w-4 h-4" />
-                </Link>
+                    Go to Admin
+                </Button>
             </Show>
-        </div>
+        </Stack>
     );
 }

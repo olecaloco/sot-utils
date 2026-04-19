@@ -1,18 +1,30 @@
 import { PortalHeader } from "@/components/portal/Header";
 import { PortalNavigation } from "@/components/portal/Navigation";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
 
 export default function PortalLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <div className="flex h-full flex-col">
+        <Stack direction={"column"} sx={{ height: "100dvh" }}>
             <PortalHeader />
-            <div className="flex flex-1 container mx-auto overflow-hidden">
-                <aside className="pt-10 border-r border-gray-800 w-60 shrink-0">
+            <Stack direction={"row"} sx={{ flex: 1 }}>
+                <Stack
+                    component={"aside"}
+                    direction={"row"}
+                    sx={{
+                        width: "240px",
+                        minWidth: 0,
+                        flexShrink: 0,
+                        justifyContent: "space-between",
+                    }}
+                >
                     <PortalNavigation />
-                </aside>
+                    <Divider orientation="vertical" />
+                </Stack>
                 <main className="flex-1 overflow-hidden">{children}</main>
-            </div>
-        </div>
+            </Stack>
+        </Stack>
     );
 }

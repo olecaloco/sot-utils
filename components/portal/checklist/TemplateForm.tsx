@@ -6,7 +6,9 @@ import {
 } from "@/interfaces/Checklist";
 import { db } from "@/lib/firebase-client";
 import { saveChecklistTemplate } from "@/services/checklist";
-import { cn } from "@/utils";
+import Paper from "@mui/material/Paper";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -87,7 +89,9 @@ export const ChecklistTemplateForm = ({
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const contentsToSave: any = { ...contents };
+        const contentsToSave: Partial<Record<ChecklistType, string>> = {
+            ...contents,
+        };
 
         if (type === "regular") {
             delete contentsToSave.trainee_during_stream;
@@ -101,9 +105,8 @@ export const ChecklistTemplateForm = ({
             delete contentsToSave.trainee_troubleshooting;
         } else if (type === "trainee") {
             delete contentsToSave.team_prestream;
-            delete contentsToSave.team_poststream;
             delete contentsToSave.model_prestream;
-            delete contentsToSave.model_poststream;
+            delete contentsToSave.poststream;
         }
 
         toast.promise(saveChecklistTemplate(contentsToSave), {
@@ -123,21 +126,20 @@ export const ChecklistTemplateForm = ({
             className="space-y-4"
         >
             {/* Toggle */}
-            <div className="flex rounded bg-slate-700 p-1 w-fit text-sm">
-                {FilteredChecklistTypes.map((type) => (
-                    <button
-                        key={type}
-                        type="button"
-                        onClick={() => setMode(type)}
-                        className={cn("px-4 py-1 rounded cursor-pointer", {
-                            "bg-slate-900 text-white": mode === type,
-                            "text-gray-300": mode !== type,
-                        })}
-                    >
-                        {labels[type] || type}
-                    </button>
-                ))}
-            </div>
+            <Paper>
+                <Tabs
+                    value={mode}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    onChange={(_, value) => {
+                        setMode(value);
+                    }}
+                >
+                    {FilteredChecklistTypes.map((type) => (
+                        <Tab key={type} value={type} label={labels[type]} />
+                    ))}
+                </Tabs>
+            </Paper>
 
             <div className="grid grid-cols-2 gap-4 items-stretch">
                 <div className="flex flex-col">
@@ -146,7 +148,7 @@ export const ChecklistTemplateForm = ({
                     </label>
                     <textarea
                         name={mode}
-                        className="flex-1 min-h-75 p-2 rounded border border-gray-800  text-gray-300 font-mono resize-none"
+                        className="flex-1 min-h-75 p-2 rounded border border-zinc-800  text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#f89f8e] text-sm resize-none"
                         value={currentContent}
                         onChange={(e) =>
                             setContents((prev) => ({
@@ -159,9 +161,9 @@ export const ChecklistTemplateForm = ({
 
                 <div className="flex flex-col">
                     <label className="mb-2">Preview</label>
-                    <div className="flex-1 min-h-75 overflow-auto p-4 rounded bg-slate-800 text-gray-200 whitespace-pre-wrap">
+                    <Paper className="flex-1 min-h-75 overflow-auto p-4 rounded text-gray-200 whitespace-pre-wrap">
                         {renderedPreview}
-                    </div>
+                    </Paper>
                 </div>
             </div>
         </form>

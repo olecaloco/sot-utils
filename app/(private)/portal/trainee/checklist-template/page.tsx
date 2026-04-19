@@ -1,3 +1,5 @@
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import { ChecklistTemplateForm } from "@/components/portal/checklist/TemplateForm";
 
 export default async function TrainingChecklistTemplate() {
@@ -10,20 +12,18 @@ export default async function TrainingChecklistTemplate() {
                     </h1>
                     <div className="text-sm text-gray-500">
                         Update the template for pre and post stream checklists.
-                        Use{" "}
-                        <code className="bg-slate-700 text-gray-300 px-1 py-0.5 rounded">
-                            {`{items}`}
-                        </code>{" "}
-                        to insert checklist values.
+                        Use <Chip size="small" label="{items}" /> to insert
+                        checklist values.
                     </div>
                 </div>
-                <button
+                <Button
+                    size="small"
+                    variant="contained"
                     form="checklist-template-form"
                     type="submit"
-                    className="px-2 py-1 text-sm bg-slate-800 hover:bg-slate-900 rounded cursor-pointer"
                 >
                     Save
-                </button>
+                </Button>
             </div>
             <ChecklistTemplateForm type="trainee" />
         </div>

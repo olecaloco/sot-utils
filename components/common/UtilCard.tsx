@@ -1,3 +1,9 @@
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { SquareArrowOutUpRightIcon } from "lucide-react";
 import Link from "next/link";
 
 export function UtilCard({
@@ -5,20 +11,55 @@ export function UtilCard({
     description,
     href,
     icon,
+    external,
 }: Readonly<{
     title: string;
     description: string;
     href: string;
     icon?: React.ReactNode;
+    external?: boolean;
 }>) {
+    if (external) {
+        return (
+            <a className="w-full max-w-75 min-h-0" href={href} target="_blank">
+                <Card
+                    className="hover:bg-[#f89f8e]/10 transition"
+                    sx={{ height: "100%" }}
+                >
+                    <CardContent>
+                        <Box sx={{ mb: 2 }}>{icon}</Box>
+                        <Stack
+                            direction={"row"}
+                            spacing={1}
+                            sx={{ alignItems: "center" }}
+                        >
+                            <Typography sx={{ fontWeight: "bold" }}>
+                                {title}
+                            </Typography>
+                            <SquareArrowOutUpRightIcon className="w-4" />
+                        </Stack>
+                        <Typography variant="caption" color="textSecondary">
+                            {description}
+                        </Typography>
+                    </CardContent>
+                </Card>
+            </a>
+        );
+    }
     return (
-        <Link
-            href={href}
-            className="block rounded-lg border bg-slate-900 border-gray-200 p-4 shadow w-full max-w-75 hover:bg-slate-800"
-        >
-            <div className="mb-2">{icon}</div>
-            <h2 className="text-sm md:text-lg font-semibold">{title}</h2>
-            <p className="text-xs text-gray-600">{description}</p>
+        <Link className="w-full max-w-75 min-h-0" href={href}>
+            <Card
+                className="hover:bg-[#f89f8e]/10 transition"
+                sx={{ height: "100%" }}
+            >
+                <CardContent>
+                    <Box sx={{ mb: 2 }}>{icon}</Box>
+                    <Typography sx={{ fontWeight: "bold" }}>{title}</Typography>
+                    <Typography variant="caption" color="textSecondary">
+                        {description}
+                    </Typography>
+                </CardContent>
+            </Card>
         </Link>
     );
 }
