@@ -7,9 +7,9 @@ export default function PortalLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <Stack direction={"column"} sx={{ height: "100dvh" }}>
+        <Stack direction={"column"} sx={{ height: "100%" }}>
             <PortalHeader />
-            <Stack direction={"row"} sx={{ flex: 1 }}>
+            <Stack direction={"row"} sx={{ flex: 1, overflow: "hidden" }}>
                 <Stack
                     component={"aside"}
                     direction={"row"}
@@ -23,7 +23,9 @@ export default function PortalLayout({
                     <PortalNavigation />
                     <Divider orientation="vertical" />
                 </Stack>
-                <main className="flex-1 overflow-hidden">{children}</main>
+                <main className="flex flex-col flex-1 overflow-hidden">
+                    {children}
+                </main>
             </Stack>
         </Stack>
     );

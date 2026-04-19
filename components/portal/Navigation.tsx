@@ -102,7 +102,7 @@ export function PortalNavigation() {
     const pathname = usePathname();
 
     return (
-        <nav className="flex-1 h-full overflow-y-auto">
+        <nav className="flex-1 h-full overflow-y-auto pb-4">
             <ul className="flex flex-col gap-1">
                 <SubHeader title="General" />
                 <NavItem href="/" label="Back to Home" />
