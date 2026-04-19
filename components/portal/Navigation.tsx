@@ -10,15 +10,15 @@ const LINKS = [
         label: "Template",
     },
     {
-        href: "/portal/team/pre-stream-checklist",
+        href: "/portal/checklists/team_prestream",
         label: "Team Pre-stream",
     },
     {
-        href: "/portal/model/pre-stream-checklist",
+        href: "/portal/checklists/model_prestream",
         label: "Model Pre-stream",
     },
     {
-        href: "/portal/poststream",
+        href: "/portal/checklists/poststream",
         label: "Post-stream",
     },
 ];
@@ -29,95 +29,100 @@ const TRAINEE_LINKS = [
         label: "Template",
     },
     {
-        href: "/portal/trainee/stream-prep",
+        href: "/portal/checklists/trainee_stream_prep",
         label: "Trainee Stream Prep",
     },
     {
-        href: "/portal/trainee/team-prestream",
+        href: "/portal/checklists/trainee_team_prestream",
         label: "Trainee Team Pre-stream",
     },
     {
-        href: "/portal/trainee/model-pre-stream",
+        href: "/portal/checklists/trainee_model_prestream",
         label: "Trainee Model Pre-stream",
     },
     {
-        href: "/portal/trainee/cb-prestream",
+        href: "/portal/checklists/trainee_cb_prestream",
         label: "Trainee CB Pre-stream",
     },
     {
-        href: "/portal/trainee/mts-prestream",
+        href: "/portal/checklists/trainee_mts_prestream",
         label: "Trainee MTS Pre-stream",
     },
     {
-        href: "/portal/trainee/phone-prestream",
+        href: "/portal/checklists/trainee_phone_prestream",
         label: "Trainee Phone Pre-stream",
     },
     {
-        href: "/portal/trainee/troubleshooting",
-        label: "Trainee Troubleshooting",
-    },
-    {
-        href: "/portal/trainee/during-stream",
+        href: "/portal/checklists/trainee_during_stream",
         label: "Trainee During Stream",
     },
     {
-        href: "/portal/trainee/post-stream",
-        label: "Trainee Post Stream",
+        href: "/portal/checklists/trainee_troubleshooting",
+        label: "Trainee Troubleshooting",
+    },
+    {
+        href: "/portal/checklists/trainee_poststream",
+        label: "Trainee Post-stream",
     },
 ];
+
+const SubHeader = ({ title }: { title: string }) => (
+    <li className="px-4 my-4 text-sm font-semibold text-gray-300 uppercase">
+        <span>{title}</span>
+    </li>
+);
+
+const NavItem = ({
+    href,
+    label,
+    active,
+}: {
+    href: string;
+    label: string;
+    active?: boolean;
+}) => (
+    <li
+        className={cn("px-4", {
+            "bg-[#f89f8e]/10": active,
+        })}
+    >
+        <Link
+            href={href}
+            className={cn("text-sm", {
+                "text-[#f89f8e]": active,
+                "text-gray-600 hover:text-gray-300": !active,
+            })}
+        >
+            <span>{label}</span>
+        </Link>
+    </li>
+);
 
 export function PortalNavigation() {
     const pathname = usePathname();
 
     return (
-        <nav>
+        <nav className="flex-1 h-full overflow-y-auto">
             <ul className="flex flex-col gap-1">
-                <li className="text-sm font-semibold mb-2 text-gray-200 uppercase">
-                    <span>General</span>
-                </li>
-                <li className="mb-4">
-                    <Link
-                        href="/"
-                        className="text-sm text-gray-600 hover:text-gray-400"
-                    >
-                        <span>Back to Home</span>
-                    </Link>
-                </li>
-                <li className="text-sm font-semibold mb-2 text-gray-200 uppercase">
-                    <span>Checklist</span>
-                </li>
+                <SubHeader title="General" />
+                <NavItem href="/" label="Back to Home" />
+                <SubHeader title="Checklist" />
                 {LINKS.map((link) => (
-                    <li key={link.href}>
-                        <Link
-                            href={link.href}
-                            className={cn("text-sm", {
-                                "text-gray-200 font-bold":
-                                    pathname === link.href,
-                                "text-gray-600 hover:text-gray-400":
-                                    pathname !== link.href,
-                            })}
-                        >
-                            <span>{link.label}</span>
-                        </Link>
-                    </li>
+                    <NavItem
+                        key={link.href}
+                        href={link.href}
+                        label={link.label}
+                        active={pathname === link.href}
+                    />
                 ))}
-                <li className="text-sm font-semibold mb-2 text-gray-200 uppercase mt-4">
-                    <span>TRAINING</span>
-                </li>
+                <SubHeader title="Training" />
                 {TRAINEE_LINKS.map((link) => (
-                    <li key={link.href}>
-                        <Link
-                            href={link.href}
-                            className={cn("text-sm", {
-                                "text-gray-200 font-bold":
-                                    pathname === link.href,
-                                "text-gray-600 hover:text-gray-400":
-                                    pathname !== link.href,
-                            })}
-                        >
-                            <span>{link.label}</span>
-                        </Link>
-                    </li>
+                    <NavItem
+                        key={link.href}
+                        href={link.href}
+                        label={link.label}
+                        active={pathname === link.href}
+                    />
                 ))}
             </ul>
         </nav>
