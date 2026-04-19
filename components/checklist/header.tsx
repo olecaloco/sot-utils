@@ -1,13 +1,23 @@
-import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
+import Stack from "@mui/material/Stack";
+import { ArrowLeftIcon } from "lucide-react";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 
 export function ChecklistHeader({ title }: { title: string }) {
     return (
-        <div className="flex items-center gap-2 p-2 border-b border-slate-700">
-            <Link href="/">
+        <Stack
+            direction="row"
+            sx={{
+                alignItems: "center",
+                p: 1,
+                gap: 1,
+            }}
+        >
+            <IconButton LinkComponent={Link} href="/">
                 <ArrowLeftIcon className="w-6 h-6 text-gray-500" />
-            </Link>
-            <h1 className="text-lg font-semibold">{title}</h1>
-        </div>
+            </IconButton>
+            <Typography sx={{ fontWeight: 600 }}>{title}</Typography>
+        </Stack>
     );
 }

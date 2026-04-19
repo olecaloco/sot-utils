@@ -5,6 +5,11 @@ import { parseInput } from "./utils";
 import Link from "next/link";
 import { ArrowLeftIcon } from "lucide-react";
 import ErrorAlert from "./ErrorAlert";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
 
 export default function TokenNotesApp() {
     const [value, setValue] = useState("");
@@ -72,21 +77,26 @@ export default function TokenNotesApp() {
     };
 
     return (
-        <main className="h-full flex items-center justify-center p-4">
-            <div className="flex flex-col bg-slate-800 rounded border border-slate-700 w-full max-w-400 h-full max-h-200">
-                <div className="flex items-center gap-2 p-2 border-b border-slate-700">
-                    <Link href="/">
+        <main className="h-full">
+            <div className="flex flex-col w-full h-dvh">
+                <div className="flex items-center gap-1 p-2">
+                    <IconButton LinkComponent={Link} href="/">
                         <ArrowLeftIcon className="w-6 h-6 text-gray-500" />
-                    </Link>
+                    </IconButton>
                     <h1 className="text-lg font-semibold">Token Notes</h1>
                 </div>
 
+                <Divider />
+
                 <div className="flex flex-1 gap-4 p-2 overflow-y-auto">
                     <textarea
-                        className="w-1/2 max-w-300 h-full p-3 rounded-lg border border-slate-700 bg-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                        className="w-1/2 max-w-300 h-full p-3 rounded-lg border border-zinc-800 focus:outline-none focus:ring-2 focus:ring-[#f89f8e] text-sm"
                         value={value}
                         onChange={(e) => setValue(e.target.value)}
-                        placeholder={`Template:
+                        autoFocus
+                        placeholder={`Paste your notes here
+
+Template:
 
 username tipped 500 tokens
 
@@ -95,20 +105,22 @@ Notice: @username 💰 tipped for → menu item 🥰`}
                     />
 
                     {/* RIGHT */}
-                    <div className="flex flex-col w-1/2">
+                    <Paper className="flex flex-col w-1/2 p-2">
                         {/* Controls */}
                         <div className="flex items-center justify-between gap-3 mb-4">
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                className="w-full px-3 py-2 text-sm border border-slate-700 bg-slate-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            <TextField
+                                size={"small"}
+                                type={"text"}
+                                label="Search"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
+                                sx={{ width: "100%" }}
+                                placeholder="Enter a username or detail"
                             />
                         </div>
 
                         {/* Table */}
-                        <div className="flex-1 border border-slate-700 rounded-lg overflow-hidden overflow-y-auto">
+                        <div className="flex-1 rounded-lg overflow-hidden overflow-y-auto">
                             <table className="w-full text-sm">
                                 <thead className="text-left">
                                     <tr>
@@ -136,7 +148,7 @@ Notice: @username 💰 tipped for → menu item 🥰`}
                                         filteredRows.map((row) => (
                                             <tr
                                                 key={row.user}
-                                                className="border-t border-t-slate-700 hover:bg-slate-900"
+                                                className=" hover:bg-[#f89f8e]/10"
                                             >
                                                 <td className="px-4 py-2">
                                                     {row.user}
@@ -160,17 +172,19 @@ Notice: @username 💰 tipped for → menu item 🥰`}
                         {invalidLines.length > 0 && (
                             <ErrorAlert lines={invalidLines} />
                         )}
-                    </div>
+                    </Paper>
                 </div>
 
-                <div className="flex justify-end p-2 border-t border-slate-700">
-                    <button
-                        className="bg-slate-700 hover:bg-slate-900 disabled:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed text-white py-2 px-4 rounded cursor-pointer"
+                <Divider />
+
+                <div className="flex justify-end p-2">
+                    <Button
+                        variant="contained"
                         onClick={exportCSV}
                         disabled={filteredRows.length === 0}
                     >
                         Export CSV
-                    </button>
+                    </Button>
                 </div>
             </div>
         </main>

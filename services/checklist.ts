@@ -2,14 +2,14 @@
 
 import { Checklist, ChecklistType } from "@/interfaces/Checklist";
 import { db } from "@/lib/firebase-client";
-import { doc, FirestoreError, setDoc } from "firebase/firestore";
+import { doc, FirestoreError, setDoc, writeBatch } from "firebase/firestore";
 
 export async function upsertChecklist(
-    type: ChecklistType,
+    id: string,
     checklist: Checklist["items"],
 ): Promise<void> {
     try {
-        const reference = doc(db, `checklists`, type);
+        const reference = doc(db, `checklists`, id);
         return await setDoc(reference, { items: checklist }, { merge: true });
     } catch (error) {
         if (error instanceof FirestoreError) {
@@ -20,18 +20,20 @@ export async function upsertChecklist(
     }
 }
 
-export async function saveChecklistTemplate(contents: { [key in ChecklistType]: string }): Promise<void> {
+export async function saveChecklistTemplate(contents: Partial<Record<ChecklistType, string>>): Promise<void> {
     try {
         const contentsArr = Object.values(ChecklistType);
+
+        const batch = writeBatch(db);
         
-        const requests = contentsArr
+        contentsArr
             .filter((type) => contents[type])
-            .map((type) => {
-                const reference = doc(db, `checklistTemplate`, type);
-                return setDoc(reference, { content: contents[type] }, { merge: true });
+            .forEach(type => {
+                const reference = doc(db, "checklistTemplate", type);
+                batch.set(reference, { content: contents[type] }, { merge: true });
             });
 
-        await Promise.all(requests);
+        await batch.commit();
     } catch (error) {
         if (error instanceof FirestoreError) {
             console.error("Firestore error:", error.code, error.message);
