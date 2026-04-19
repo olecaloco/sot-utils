@@ -6,10 +6,10 @@ import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase-client";
 import { toast } from "sonner";
-import Divider from "@mui/material/Divider";
 import { ChecklistFooter } from "../footer";
 import { MultiChecklistTabs } from "./tabs";
 import { MultiChecklistItems } from "./items";
+import Stack from "@mui/material/Stack";
 
 export function MultiTabbedChecklist({
     title,
@@ -44,8 +44,6 @@ export function MultiTabbedChecklist({
         Record<ChecklistType, Checklist["items"]>
     >({} as Record<ChecklistType, Checklist["items"]>);
 
-    console.log(checklists);
-
     // Fetch Checklist items for all types
     useEffect(() => {
         const requests = types.map((type) => {
@@ -70,7 +68,7 @@ export function MultiTabbedChecklist({
         });
 
         Promise.allSettled(requests);
-    }, []);
+    }, [types]);
 
     // Fetch templates for all types
     useEffect(() => {
@@ -96,7 +94,7 @@ export function MultiTabbedChecklist({
         });
 
         Promise.allSettled(requests);
-    }, []);
+    }, [types]);
 
     const handleCheckChange = (checked: boolean, index: number) => {
         setChecklists((prev) => {
@@ -125,16 +123,16 @@ export function MultiTabbedChecklist({
     return (
         <div className="flex flex-col w-full h-dvh">
             <ChecklistHeader title={title} />
-            <Divider />
 
-            <div className="flex flex-1 min-h-0">
+            <Stack
+                direction={{ xs: "column", md: "row" }}
+                sx={{ flex: 1, minHeight: 0 }}
+            >
                 <MultiChecklistTabs
                     types={types}
                     activeType={activeType}
                     setActiveType={setActiveType}
                 />
-
-                <Divider orientation={"vertical"} />
 
                 <MultiChecklistItems
                     activeType={activeType}
@@ -142,9 +140,7 @@ export function MultiTabbedChecklist({
                     checklists={checklists}
                     handleCheckChange={handleCheckChange}
                 />
-            </div>
-
-            <Divider />
+            </Stack>
 
             <ChecklistFooter handleCopy={handleCopy} />
         </div>

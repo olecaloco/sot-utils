@@ -4,6 +4,7 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Box from "@mui/material/Box";
+import Image from "next/image";
 
 interface MultiChecklistItemsProps {
     activeType: ChecklistType;
@@ -27,9 +28,11 @@ export function MultiChecklistItems(
                 >
                     {checklists[activeType].length === 0 && (
                         <div className="flex flex-col items-center justify-center px-4 py-2 h-full gap-4">
-                            <img
+                            <Image
                                 src="https://cdn.7tv.app/emote/01FC1B04XR000E3W5GESZFF1AY/2x.webp"
                                 alt="Shrug"
+                                width={66}
+                                height={64}
                             />
                             <p className="text-zinc-700">
                                 Welp, this item is not found.

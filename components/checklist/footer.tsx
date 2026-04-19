@@ -14,6 +14,7 @@ export function ChecklistFooter(props: ChecklistFooterProps): ReactElement {
             sx={{
                 alignItems: "flex-end",
                 p: 1,
+                borderTop: (theme) => `1px solid ${theme.palette.divider}`,
             }}
         >
             <Button variant={"contained"} onClick={handleCopy}>

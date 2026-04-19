@@ -16,7 +16,7 @@
 /* Handle */
 ::-webkit-scrollbar-thumb {
   cursor: grab;
-  background: var(--color-gray-700);
+  background: var(--color-zinc-700);
   border-radius: 4px;
 }
 
@@ -26,5 +26,5 @@
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-600);
+  background: var(--color-zinc-600);
 }

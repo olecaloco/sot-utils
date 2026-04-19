@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { UpsertFormLoader } from "./FormLoader";
 import { PORTAL_CHECKLIST_TITLES } from "./constants";
+import Image from "next/image";
 
 interface UpsertFormProps {
     name?: string;
@@ -33,7 +34,6 @@ export default function UpsertForm(props: UpsertFormProps) {
                 if (!docSnap.exists()) {
                     setNotExists(true);
                     setLoading(false);
-                    console.log("test");
                     return;
                 }
 
@@ -156,9 +156,11 @@ export default function UpsertForm(props: UpsertFormProps) {
     if (notExists && !loading) {
         return (
             <div className="flex flex-col items-center justify-center px-4 py-2 h-full gap-4">
-                <img
+                <Image
                     src="https://cdn.7tv.app/emote/01FC1B04XR000E3W5GESZFF1AY/2x.webp"
                     alt="Shrug"
+                    width={66}
+                    height={64}
                 />
                 <p className="text-zinc-700">Welp, this item is not found.</p>
             </div>

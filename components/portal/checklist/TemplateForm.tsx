@@ -8,7 +8,7 @@ import { db } from "@/lib/firebase-client";
 import { saveChecklistTemplate } from "@/services/checklist";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
+import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -133,6 +133,11 @@ export const ChecklistTemplateForm = ({
                     scrollButtons="auto"
                     onChange={(_, value) => {
                         setMode(value);
+                    }}
+                    sx={{
+                        [`& .${tabsClasses.scrollButtons}`]: {
+                            "&.Mui-disabled": { opacity: 0.3 },
+                        },
                     }}
                 >
                     {FilteredChecklistTypes.map((type) => (

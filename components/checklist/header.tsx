@@ -12,6 +12,7 @@ export function ChecklistHeader({ title }: { title: string }) {
                 alignItems: "center",
                 p: 1,
                 gap: 1,
+                borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
             }}
         >
             <IconButton LinkComponent={Link} href="/">

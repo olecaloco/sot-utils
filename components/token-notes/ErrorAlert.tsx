@@ -11,7 +11,7 @@ export default function ErrorAlert({ lines }: Props) {
     return (
         <Alert severity="error">
             <AlertTitle>
-                Some lines didn't match the required template:
+                Some lines didn&apos;t match the required template:
             </AlertTitle>
             <ul className="mt-2">
                 {lines.map((line, i) => (
