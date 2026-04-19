@@ -26,8 +26,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={`${geistSans.variable}`}>
-            <body>
+        <html lang="en" className={`w-full h-full ${geistSans.variable}`}>
+            <body className="w-full h-full ">
                 <AppRouterCacheProvider options={{ enableCssLayer: true }}>
                     <ThemeProvider defaultMode="dark" theme={theme}>
                         <CssBaseline />

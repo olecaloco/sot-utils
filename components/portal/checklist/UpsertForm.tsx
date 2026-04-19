@@ -166,7 +166,7 @@ export default function UpsertForm(props: UpsertFormProps) {
     }
 
     return (
-        <div className="flex flex-col px-4 py-2 h-full gap-4">
+        <div className="flex flex-col flex-1 px-4 py-2 h-full gap-4">
             <div className="flex items-center justify-between mb-2">
                 <div>
                     <h1 className="text-xl font-semibold text-gray-300">
