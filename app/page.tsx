@@ -73,7 +73,7 @@ export default async function Home() {
                 <UtilCard
                     title="Stream title GPT"
                     description="AI help for your stream titles"
-                    href="https://chatgpt.com"
+                    href="https://chatgpt.com/g/g-69d4d97cf16081918b83ba3d7cd9fcbe-stream-titles-for-aruna-sot"
                     icon={<BotMessageSquareIcon className="w-6 h-6" />}
                     external
                 />
