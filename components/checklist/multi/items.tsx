@@ -53,7 +53,11 @@ export function MultiChecklistItems(
                                     />
                                 }
                                 label={item.text}
-                                sx={{ p: 0, m: 0 }}
+                                sx={{
+                                    p: 0,
+                                    m: 0,
+                                    color: "var(--color-zinc-300)",
+                                }}
                             />
                         </Box>
                     ))}

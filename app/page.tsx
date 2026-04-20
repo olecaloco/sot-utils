@@ -81,13 +81,20 @@ export default async function Home() {
 
             <Show when="signed-out">
                 <SignInButton>
-                    <a
-                        className="flex items-center gap-1 text-sm underline"
-                        href="#"
+                    <Button
+                        LinkComponent={"a"}
+                        endIcon={<ArrowRightIcon />}
+                        sx={{
+                            ".MuiButton-icon": {
+                                transition: "all 150ms ease-in-out",
+                            },
+                            ":hover .MuiButton-icon": {
+                                ml: 2,
+                            },
+                        }}
                     >
                         <span>Go to Admin</span>
-                        <ArrowRightIcon className="w-4 h-4" />
-                    </a>
+                    </Button>
                 </SignInButton>
             </Show>
             <Show when="signed-in">
