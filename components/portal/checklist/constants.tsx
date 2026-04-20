@@ -13,4 +13,5 @@ export const PORTAL_CHECKLIST_TITLES: Record<ChecklistType, string> = {
     trainee_phone_prestream: "Trainee Phone Pre-stream",
     trainee_troubleshooting: "Trainee Troubleshooting",
     trainee_poststream: "Trainee Post-stream",
+    trainee_first_stream: "Trainee First stream",
 };

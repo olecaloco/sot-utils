@@ -11,6 +11,7 @@ export const ChecklistType = {
     TraineeDuringStream: "trainee_during_stream",
     TraineeTroubleshooting: "trainee_troubleshooting",
     TraineePoststream: "trainee_poststream",
+    TraineeFirstStream: "trainee_first_stream",
 } as const;
 
 export const RegularChecklistTypes = [
@@ -29,6 +30,7 @@ export const TraineeChecklistTypes = [
     ChecklistType.TraineeDuringStream,
     ChecklistType.TraineeTroubleshooting,
     ChecklistType.TraineePoststream,
+    ChecklistType.TraineeFirstStream
 ] as const;
 
 export type ChecklistType = (typeof ChecklistType)[keyof typeof ChecklistType];

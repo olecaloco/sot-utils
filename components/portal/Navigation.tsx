@@ -64,6 +64,10 @@ const TRAINEE_LINKS = [
         href: "/portal/checklists/trainee_poststream",
         label: "Trainee Post-stream",
     },
+    {
+        href: "/portal/checklists/trainee_first_stream",
+        label: "Trainee First stream",
+    },
 ];
 
 const SubHeader = ({ title }: { title: string }) => (

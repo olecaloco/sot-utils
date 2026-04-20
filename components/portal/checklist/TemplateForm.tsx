@@ -26,6 +26,7 @@ const labels: Record<ChecklistType, string> = {
     trainee_phone_prestream: "Phone Pre-stream",
     trainee_troubleshooting: "Troubleshooting",
     trainee_poststream: "Post-stream",
+    trainee_first_stream: "First stream",
 };
 
 const defaultTemplates = () => {
@@ -56,6 +57,7 @@ export const ChecklistTemplateForm = ({
         trainee_phone_prestream: defaultTemplates(),
         trainee_troubleshooting: defaultTemplates(),
         trainee_poststream: defaultTemplates(),
+        trainee_first_stream: defaultTemplates(),
     });
 
     const currentContent = contents[mode];

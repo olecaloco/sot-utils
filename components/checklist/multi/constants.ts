@@ -13,4 +13,5 @@ export const TAB_TITLES: Record<ChecklistType, string> = {
     trainee_phone_prestream: "Phone Pre-stream",
     trainee_troubleshooting: "Troubleshooting",
     trainee_poststream: "Post-stream",
+    trainee_first_stream: "First stream"
 };
