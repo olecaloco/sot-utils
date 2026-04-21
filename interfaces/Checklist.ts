@@ -41,5 +41,18 @@ export interface ChecklistItem {
 }
 
 export interface Checklist {
+    id?: string;
+    order?: number;
+    title: string;
     items: ChecklistItem[];
+    group: ChecklistGroup;
+    template?: string;
 }
+
+export const ChecklistGroup = {
+    Operations_Prestream: "operations_prestream",
+    Operations_Poststream: "operations_poststream",
+    Training: "training"
+} as const;
+
+export type ChecklistGroup = (typeof ChecklistGroup)[keyof typeof ChecklistGroup];

@@ -1,10 +1,10 @@
-import UpsertForm from "@/components/portal/checklist/UpsertForm";
+import UpdateChecklistForm from "@/components/portal/checklist/UpdateForm";
 
-export default async function PortalChecklistPage({
+export default async function PortalChecklistDetailsPage({
     params,
 }: {
     params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
-    return <UpsertForm id={id} />;
+    return <UpdateChecklistForm id={id} />;
 }

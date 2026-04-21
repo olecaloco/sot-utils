@@ -1,33 +1,12 @@
 "use client";
-import {
-    ChecklistType,
-    RegularChecklistTypes,
-    TraineeChecklistTypes,
-} from "@/interfaces/Checklist";
-import { db } from "@/lib/firebase-client";
-import { saveChecklistTemplate } from "@/services/checklist";
+import { useChecklists } from "@/contexts/ChecklistContextProvider";
+import { Checklist, ChecklistGroup } from "@/interfaces/Checklist";
+import { saveChecklistsTemplates } from "@/services/checklist";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
-import { doc, getDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-
-const labels: Record<ChecklistType, string> = {
-    team_prestream: "Team Pre-stream",
-    model_prestream: "Model Pre-stream",
-    poststream: "Post-stream",
-    trainee_stream_prep: "Stream Prep",
-    trainee_team_prestream: "Team Pre-stream",
-    trainee_during_stream: "During Stream",
-    trainee_model_prestream: "Model Pre-stream",
-    trainee_cb_prestream: "CB Pre-stream",
-    trainee_mts_prestream: "MTS Pre-stream",
-    trainee_phone_prestream: "Phone Pre-stream",
-    trainee_troubleshooting: "Troubleshooting",
-    trainee_poststream: "Post-stream",
-    trainee_first_stream: "First stream",
-};
 
 const defaultTemplates = () => {
     return `Checklist Title
@@ -36,90 +15,77 @@ const defaultTemplates = () => {
 };
 
 export const ChecklistTemplateForm = ({
-    type,
+    groups,
 }: {
-    type: "regular" | "trainee";
+    groups: ChecklistGroup[];
 }) => {
-    const [mode, setMode] = useState<ChecklistType>(
-        type === "regular" ? "team_prestream" : "trainee_stream_prep",
-    );
+    const { checklists: serverChecklists, isFetchingChecklists } =
+        useChecklists();
 
-    const [contents, setContents] = useState<Record<ChecklistType, string>>({
-        team_prestream: defaultTemplates(),
-        model_prestream: defaultTemplates(),
-        poststream: defaultTemplates(),
-        trainee_stream_prep: defaultTemplates(),
-        trainee_team_prestream: defaultTemplates(),
-        trainee_during_stream: defaultTemplates(),
-        trainee_model_prestream: defaultTemplates(),
-        trainee_cb_prestream: defaultTemplates(),
-        trainee_mts_prestream: defaultTemplates(),
-        trainee_phone_prestream: defaultTemplates(),
-        trainee_troubleshooting: defaultTemplates(),
-        trainee_poststream: defaultTemplates(),
-        trainee_first_stream: defaultTemplates(),
-    });
+    const [activeChecklistId, setActiveChecklistId] = useState<string>("");
+    const [checklists, setChecklists] = useState<Checklist[]>([]);
 
-    const currentContent = contents[mode];
+    const checklist = useMemo(() => {
+        if (checklists.length === 0) return null;
 
-    const renderedPreview = currentContent.replace(
-        /{items}/g,
-        `✅ Sample Item 1
-❌ Sample Item 2`,
-    );
+        return checklists.find((c) => c.id === activeChecklistId);
+    }, [checklists, activeChecklistId]);
 
     useEffect(() => {
-        // Fetch templates
-        const fetchTemplates = async () => {
-            const keys = Object.values(ChecklistType);
-            keys.forEach(async (key) => {
-                getDoc(doc(db, "checklistTemplate", key)).then((snapshot) => {
-                    if (snapshot.exists()) {
-                        const data = snapshot.data() as { content: string };
-                        setContents((prev) => ({
-                            ...prev,
-                            [key]: data.content,
-                        }));
-                    }
-                });
-            });
-        };
+        if (isFetchingChecklists) return;
 
-        fetchTemplates();
-    }, []);
+        const _checklists = serverChecklists.filter((c) =>
+            groups.includes(c.group),
+        );
+
+        if (_checklists.length === 0) return;
+
+        setChecklists(
+            _checklists.map((c) => {
+                if (!c.template) c.template = defaultTemplates();
+                return c;
+            }),
+        );
+    }, [serverChecklists, isFetchingChecklists]);
+
+    useEffect(() => {
+        if (checklists.length === 0 || activeChecklistId) return;
+
+        setActiveChecklistId(checklists[0].id!);
+    }, [checklists, activeChecklistId]);
+
+    const renderedPreview = useMemo(() => {
+        if (!checklist || !checklist.template) return "";
+
+        return checklist.template.replace(
+            /{items}/g,
+            `✅ Sample Item 1
+❌ Sample Item 2`,
+        );
+    }, [checklists, checklist]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
+        const { value } = e.target;
+
+        setChecklists((prev) => {
+            const newChecklists = [...prev];
+            const itemIndex = newChecklists.findIndex(
+                (c) => c.id === activeChecklistId,
+            );
+            newChecklists[itemIndex].template = value;
+            return newChecklists;
+        });
+    };
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const contentsToSave: Partial<Record<ChecklistType, string>> = {
-            ...contents,
-        };
-
-        if (type === "regular") {
-            delete contentsToSave.trainee_during_stream;
-            delete contentsToSave.trainee_model_prestream;
-            delete contentsToSave.trainee_cb_prestream;
-            delete contentsToSave.trainee_mts_prestream;
-            delete contentsToSave.trainee_phone_prestream;
-            delete contentsToSave.trainee_poststream;
-            delete contentsToSave.trainee_team_prestream;
-            delete contentsToSave.trainee_stream_prep;
-            delete contentsToSave.trainee_troubleshooting;
-        } else if (type === "trainee") {
-            delete contentsToSave.team_prestream;
-            delete contentsToSave.model_prestream;
-            delete contentsToSave.poststream;
-        }
-
-        toast.promise(saveChecklistTemplate(contentsToSave), {
+        toast.promise(saveChecklistsTemplates(checklists), {
             loading: "Saving templates...",
             success: "Templates saved successfully!",
             error: "Failed to save templates.",
         });
     };
-
-    const FilteredChecklistTypes =
-        type === "regular" ? RegularChecklistTypes : TraineeChecklistTypes;
 
     return (
         <form
@@ -129,40 +95,37 @@ export const ChecklistTemplateForm = ({
         >
             {/* Toggle */}
             <Paper>
-                <Tabs
-                    value={mode}
-                    variant="scrollable"
-                    scrollButtons="auto"
-                    onChange={(_, value) => {
-                        setMode(value);
-                    }}
-                    sx={{
-                        [`& .${tabsClasses.scrollButtons}`]: {
-                            "&.Mui-disabled": { opacity: 0.3 },
-                        },
-                    }}
-                >
-                    {FilteredChecklistTypes.map((type) => (
-                        <Tab key={type} value={type} label={labels[type]} />
-                    ))}
-                </Tabs>
+                {activeChecklistId && (
+                    <Tabs
+                        value={activeChecklistId}
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        onChange={(_, value) => {
+                            setActiveChecklistId(value);
+                        }}
+                        sx={{
+                            [`& .${tabsClasses.scrollButtons}`]: {
+                                "&.Mui-disabled": { opacity: 0.3 },
+                            },
+                        }}
+                    >
+                        {checklists.map((c) => (
+                            <Tab key={c.id} value={c.id} label={c.title} />
+                        ))}
+                    </Tabs>
+                )}
             </Paper>
 
             <div className="grid grid-cols-2 gap-4 items-stretch">
                 <div className="flex flex-col">
                     <label className="mb-2">
-                        {labels[mode] || mode} Template
+                        {checklist?.title ?? "Template"}
                     </label>
                     <textarea
-                        name={mode}
+                        name={checklist?.id}
                         className="flex-1 min-h-75 p-2 rounded border border-zinc-800  text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#f89f8e] text-sm resize-none"
-                        value={currentContent}
-                        onChange={(e) =>
-                            setContents((prev) => ({
-                                ...prev,
-                                [mode]: e.target.value,
-                            }))
-                        }
+                        value={checklist?.template}
+                        onChange={handleChange}
                     />
                 </div>
 

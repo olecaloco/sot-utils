@@ -1,16 +1,24 @@
 "client only";
 
-import { Checklist, ChecklistType } from "@/interfaces/Checklist";
+import { Checklist } from "@/interfaces/Checklist";
 import { db } from "@/lib/firebase-client";
-import { doc, FirestoreError, setDoc, writeBatch } from "firebase/firestore";
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    FirestoreError,
+    setDoc,
+    writeBatch,
+} from "firebase/firestore";
 
-export async function upsertChecklist(
+export async function updateChecklist(
     id: string,
-    checklist: Checklist["items"],
+    checklist: Checklist,
 ): Promise<void> {
     try {
         const reference = doc(db, `checklists`, id);
-        return await setDoc(reference, { items: checklist }, { merge: true });
+        return await setDoc(reference, checklist, { merge: true });
     } catch (error) {
         if (error instanceof FirestoreError) {
             console.error("Firestore error:", error.code, error.message);
@@ -20,18 +28,63 @@ export async function upsertChecklist(
     }
 }
 
-export async function saveChecklistTemplate(contents: Partial<Record<ChecklistType, string>>): Promise<void> {
+export async function addChecklist(
+    checklist: Checklist,
+): Promise<{ success: boolean; id?: string }> {
     try {
-        const contentsArr = Object.values(ChecklistType);
+        const reference = collection(db, `checklists`);
+        const document = await addDoc(reference, checklist);
 
+        return {
+            id: document.id,
+            success: true,
+        };
+    } catch (error) {
+        if (error instanceof FirestoreError) {
+            console.error("Firestore error:", error.code, error.message);
+        } else {
+            console.error("Unexpected error:", error);
+        }
+
+        return {
+            success: false,
+        };
+    }
+}
+
+export async function deleteChecklist(
+    id: string,
+): Promise<{ success: boolean }> {
+    try {
+        const reference = doc(db, `checklists`, id);
+        await deleteDoc(reference);
+
+        return {
+            success: true,
+        };
+    } catch (error) {
+        if (error instanceof FirestoreError) {
+            console.error("Firestore error:", error.code, error.message);
+        } else {
+            console.error("Unexpected error:", error);
+        }
+
+        return {
+            success: false,
+        };
+    }
+}
+
+export async function saveChecklistsTemplates(
+    checklists: Checklist[],
+): Promise<void> {
+    try {
         const batch = writeBatch(db);
-        
-        contentsArr
-            .filter((type) => contents[type])
-            .forEach(type => {
-                const reference = doc(db, "checklistTemplate", type);
-                batch.set(reference, { content: contents[type] }, { merge: true });
-            });
+
+        checklists.forEach((d) => {
+            const reference = doc(db, "checklists", d.id!);
+            batch.set(reference, { template: d.template }, { merge: true });
+        });
 
         await batch.commit();
     } catch (error) {
@@ -40,5 +93,30 @@ export async function saveChecklistTemplate(contents: Partial<Record<ChecklistTy
         } else {
             console.error("Unexpected error:", error);
         }
+    }
+}
+
+export async function updateChecklistOrder(
+    checklists: Checklist[],
+): Promise<{ success: boolean }> {
+    try {
+        const batch = writeBatch(db);
+
+        checklists.forEach((c) => {
+            const reference = doc(db, "checklists", c.id!);
+            batch.set(reference, { order: c.order }, { merge: true });
+        });
+
+        await batch.commit();
+
+        return { success: true };
+    } catch (error) {
+        if (error instanceof FirestoreError) {
+            console.error("Firestore error:", error.code, error.message);
+        } else {
+            console.error("Unexpected error:", error);
+        }
+
+        return { success: false };
     }
 }

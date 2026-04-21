@@ -3,78 +3,37 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/utils";
+import IconButton from "@mui/material/IconButton";
+import { PlusIcon } from "lucide-react";
+import { useChecklists } from "@/contexts/ChecklistContextProvider";
+import { ChecklistGroup } from "@/interfaces/Checklist";
+import Skeleton from "@mui/material/Skeleton";
 
-const LINKS = [
-    {
-        href: "/portal/checklist-template",
-        label: "Template",
-    },
-    {
-        href: "/portal/checklists/team_prestream",
-        label: "Team Pre-stream",
-    },
-    {
-        href: "/portal/checklists/model_prestream",
-        label: "Model Pre-stream",
-    },
-    {
-        href: "/portal/checklists/poststream",
-        label: "Post-stream",
-    },
-];
-
-const TRAINEE_LINKS = [
-    {
-        href: "/portal/trainee/checklist-template",
-        label: "Template",
-    },
-    {
-        href: "/portal/checklists/trainee_stream_prep",
-        label: "Trainee Stream Prep",
-    },
-    {
-        href: "/portal/checklists/trainee_team_prestream",
-        label: "Trainee Team Pre-stream",
-    },
-    {
-        href: "/portal/checklists/trainee_model_prestream",
-        label: "Trainee Model Pre-stream",
-    },
-    {
-        href: "/portal/checklists/trainee_cb_prestream",
-        label: "Trainee CB Pre-stream",
-    },
-    {
-        href: "/portal/checklists/trainee_mts_prestream",
-        label: "Trainee MTS Pre-stream",
-    },
-    {
-        href: "/portal/checklists/trainee_phone_prestream",
-        label: "Trainee Phone Pre-stream",
-    },
-    {
-        href: "/portal/checklists/trainee_during_stream",
-        label: "Trainee During Stream",
-    },
-    {
-        href: "/portal/checklists/trainee_troubleshooting",
-        label: "Trainee Troubleshooting",
-    },
-    {
-        href: "/portal/checklists/trainee_poststream",
-        label: "Trainee Post-stream",
-    },
-    {
-        href: "/portal/checklists/trainee_first_stream",
-        label: "Trainee First stream",
-    },
-];
-
-const SubHeader = ({ title }: { title: string }) => (
-    <li className="px-4 my-4 text-sm font-semibold text-gray-300 uppercase">
-        <span>{title}</span>
-    </li>
-);
+const SubHeader = ({
+    title,
+    showCreateButton,
+    createHref,
+}: {
+    title: string;
+    showCreateButton?: boolean;
+    createHref?: string;
+}) => {
+    if (showCreateButton && createHref) {
+        return (
+            <li className="flex items-center justify-between px-4 my-4 text-sm font-semibold text-gray-300 uppercase">
+                <span>{title}</span>
+                <IconButton LinkComponent={Link} href={createHref} size="small">
+                    <PlusIcon fontSize="small" className="w-4 h-4" />
+                </IconButton>
+            </li>
+        );
+    }
+    return (
+        <li className="px-4 my-4 text-sm font-semibold text-gray-300 uppercase">
+            <span>{title}</span>
+        </li>
+    );
+};
 
 const NavItem = ({
     href,
@@ -102,33 +61,86 @@ const NavItem = ({
     </li>
 );
 
-export function PortalNavigation() {
+const PortalNav = () => {
+    const { checklists, isFetchingChecklists } = useChecklists();
     const pathname = usePathname();
+
+    const operationsChecklist = checklists.filter(
+        (c) => c.group !== ChecklistGroup.Training,
+    );
+    const trainingChecklist = checklists.filter(
+        (c) => c.group === ChecklistGroup.Training,
+    );
 
     return (
         <nav className="flex-1 h-full overflow-y-auto pb-4">
             <ul className="flex flex-col gap-1">
                 <SubHeader title="General" />
                 <NavItem href="/" label="Back to Home" />
-                <SubHeader title="Checklist" />
-                {LINKS.map((link) => (
-                    <NavItem
-                        key={link.href}
-                        href={link.href}
-                        label={link.label}
-                        active={pathname === link.href}
-                    />
-                ))}
+                <SubHeader
+                    title="Checklist"
+                    createHref="/portal/checklists/create"
+                    showCreateButton
+                />
+                <NavItem
+                    href="/portal/checklists"
+                    label="Re-order checklists"
+                />
+                <SubHeader title="Operations" />
+                <NavItem
+                    href="/portal/checklists/templates/operations"
+                    label="Templates"
+                    active={
+                        pathname === "/portal/checklists/templates/operations"
+                    }
+                />
+                {isFetchingChecklists && (
+                    <>
+                        <Skeleton className="mx-4" width={90} />
+                        <Skeleton className="mx-4" width={90} />
+                    </>
+                )}
+                {!isFetchingChecklists &&
+                    operationsChecklist.map((link) => (
+                        <NavItem
+                            key={link.id}
+                            href={`/portal/checklists/${link.id}`}
+                            label={link.title}
+                            active={
+                                pathname === `/portal/checklists/${link.id}`
+                            }
+                        />
+                    ))}
                 <SubHeader title="Training" />
-                {TRAINEE_LINKS.map((link) => (
-                    <NavItem
-                        key={link.href}
-                        href={link.href}
-                        label={link.label}
-                        active={pathname === link.href}
-                    />
-                ))}
+                <NavItem
+                    label="Templates"
+                    href="/portal/checklists/templates/training"
+                    active={
+                        pathname === "/portal/checklists/templates/training"
+                    }
+                />
+                {isFetchingChecklists && (
+                    <>
+                        <Skeleton className="mx-4" width={90} />
+                        <Skeleton className="mx-4" width={90} />
+                    </>
+                )}
+                {!isFetchingChecklists &&
+                    trainingChecklist.map((link) => (
+                        <NavItem
+                            key={link.id}
+                            href={`/portal/checklists/${link.id}`}
+                            label={link.title}
+                            active={
+                                pathname === `/portal/checklists/${link.id}`
+                            }
+                        />
+                    ))}
             </ul>
         </nav>
     );
+};
+
+export function PortalNavigation() {
+    return <PortalNav />;
 }

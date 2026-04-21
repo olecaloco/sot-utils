@@ -4,7 +4,7 @@ export default async function PostStreamChecklistPage() {
     return (
         <MultiTabbedChecklist
             title="Post-Stream Checklists"
-            types={["poststream"]}
+            group={"operations_poststream"}
         />
     );
 }

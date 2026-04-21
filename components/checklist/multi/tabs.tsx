@@ -1,32 +1,31 @@
 import { ReactElement, SetStateAction } from "react";
-import { ChecklistType } from "@/interfaces/Checklist";
-import { TAB_TITLES } from "./constants";
+import { Checklist } from "@/interfaces/Checklist";
 import Tabs, { tabsClasses } from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 interface MultiChecklistTabsProps {
-    activeType: ChecklistType;
-    types: ChecklistType[];
-    setActiveType: (value: SetStateAction<ChecklistType>) => void;
+    activeChecklist: string;
+    checklists: Checklist[];
+    setActiveChecklist: (value: SetStateAction<string>) => void;
 }
 
 export function MultiChecklistTabs(
     props: MultiChecklistTabsProps,
 ): ReactElement {
-    const { activeType, setActiveType, types } = props;
+    const { activeChecklist, setActiveChecklist, checklists } = props;
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.up("md"));
 
     return (
         <Tabs
-            value={activeType}
+            value={activeChecklist}
             variant="scrollable"
             scrollButtons="auto"
             allowScrollButtonsMobile
             onChange={(_, value) => {
-                setActiveType(value);
+                setActiveChecklist(value);
             }}
             orientation={matches ? "vertical" : "horizontal"}
             sx={{
@@ -42,11 +41,11 @@ export function MultiChecklistTabs(
                 },
             }}
         >
-            {types.map((type) => (
+            {checklists.map((c) => (
                 <Tab
-                    key={type}
-                    value={type}
-                    label={TAB_TITLES[type] || type}
+                    key={c.id}
+                    value={c.id}
+                    label={c.title}
                     sx={{
                         alignItems: {
                             xs: undefined,

@@ -1,124 +1,78 @@
 "use client";
 
-import { Checklist, ChecklistType } from "@/interfaces/Checklist";
+import { Checklist, ChecklistGroup } from "@/interfaces/Checklist";
 import { ChecklistHeader } from "../header";
-import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase-client";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { ChecklistFooter } from "../footer";
 import { MultiChecklistTabs } from "./tabs";
 import { MultiChecklistItems } from "./items";
 import Stack from "@mui/material/Stack";
+import { useChecklists } from "@/contexts/ChecklistContextProvider";
 
 export function MultiTabbedChecklist({
     title,
-    types,
+    group,
 }: {
     title: string;
-    types: ChecklistType[];
+    group: ChecklistGroup;
 }) {
-    const [loadingChecklists, setLoadingChecklists] = useState<
-        Record<ChecklistType, boolean>
-    >(
-        Object.fromEntries(types.map((t) => [t, true])) as Record<
-            ChecklistType,
-            boolean
-        >,
+    const { checklists: serverChecklists, isFetchingChecklists } =
+        useChecklists();
+
+    const [checklists, setChecklists] = useState<Checklist[]>([]);
+    const [activeChecklist, setActiveChecklist] = useState<string>("");
+    const [checklistItems, setChecklistItems] = useState<Checklist["items"]>(
+        [],
     );
 
-    const [loadingTemplates, setLoadingTemplates] = useState<
-        Record<ChecklistType, boolean>
-    >(
-        Object.fromEntries(types.map((t) => [t, true])) as Record<
-            ChecklistType,
-            boolean
-        >,
-    );
+    const checklist = useMemo(() => {
+        if (!activeChecklist) return null;
 
-    const [templates, setTemplates] = useState<Record<ChecklistType, string>>(
-        {} as Record<ChecklistType, string>,
-    );
-    const [activeType, setActiveType] = useState<ChecklistType>(types[0]);
-    const [checklists, setChecklists] = useState<
-        Record<ChecklistType, Checklist["items"]>
-    >({} as Record<ChecklistType, Checklist["items"]>);
+        return checklists.find((c) => c.id === activeChecklist);
+    }, [checklists, activeChecklist]);
 
     // Fetch Checklist items for all types
     useEffect(() => {
-        const requests = types.map((type) => {
-            return getDoc(doc(db, "checklists", type))
-                .then((docSnap) => {
-                    setLoadingChecklists((prev) => ({
-                        ...prev,
-                        [type]: false,
-                    }));
+        if (isFetchingChecklists) return;
 
-                    if (!docSnap.exists()) {
-                        setChecklists((prev) => ({ ...prev, [type]: [] }));
-                        return;
-                    }
+        const _checklists = serverChecklists.filter((c) => c.group === group);
 
-                    const data = docSnap.data() as Checklist;
-                    setChecklists((prev) => ({ ...prev, [type]: data.items }));
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        });
+        if (!_checklists) return;
 
-        Promise.allSettled(requests);
-    }, [types]);
+        setChecklists(_checklists);
 
-    // Fetch templates for all types
+        if (_checklists.length > 0) {
+            setActiveChecklist(_checklists[0].id!);
+        }
+    }, [serverChecklists, isFetchingChecklists, group]);
+
     useEffect(() => {
-        const requests = types.map((type) => {
-            return getDoc(doc(db, "checklistTemplate", type))
-                .then((docSnap) => {
-                    setLoadingTemplates((prev) => ({
-                        ...prev,
-                        [type]: false,
-                    }));
+        const checklist = checklists.find((c) => c.id === activeChecklist);
+        if (!checklist) return;
 
-                    if (!docSnap.exists()) {
-                        setTemplates((prev) => ({ ...prev, [type]: [] }));
-                        return;
-                    }
-
-                    const data = docSnap.data() as { content: string };
-                    setTemplates((prev) => ({ ...prev, [type]: data.content }));
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        });
-
-        Promise.allSettled(requests);
-    }, [types]);
+        setChecklistItems(checklist.items);
+    }, [activeChecklist, checklists]);
 
     const handleCheckChange = (checked: boolean, index: number) => {
-        setChecklists((prev) => {
-            const newChecklist = [...prev[activeType]];
+        setChecklistItems((prev) => {
+            const newChecklist = [...prev];
             newChecklist[index].checked = checked;
-            return { ...prev, [activeType]: newChecklist };
+            return newChecklist;
         });
     };
 
     const handleCopy = async (): Promise<void> => {
-        const checklistItems = checklists[activeType]
+        const _checklistItems = checklistItems
             .map((item) => `${item.checked ? "✅" : "❌"} ${item.text}`)
             .join("\n");
 
-        let clipboardText = templates[activeType] || "{items}";
-        clipboardText = clipboardText.replace("{items}", checklistItems);
+        let clipboardText = checklist?.template || "{items}";
+        clipboardText = clipboardText.replace("{items}", _checklistItems);
 
         await navigator.clipboard.writeText(clipboardText);
         toast.success("Checklist data is ready to paste!");
     };
-
-    const loading =
-        Object.values(loadingChecklists).some((v) => v) &&
-        Object.values(loadingTemplates).some((v) => v);
 
     return (
         <div className="flex flex-col w-full h-dvh">
@@ -128,16 +82,16 @@ export function MultiTabbedChecklist({
                 direction={{ xs: "column", md: "row" }}
                 sx={{ flex: 1, minHeight: 0 }}
             >
-                <MultiChecklistTabs
-                    types={types}
-                    activeType={activeType}
-                    setActiveType={setActiveType}
-                />
+                {activeChecklist && (
+                    <MultiChecklistTabs
+                        checklists={checklists}
+                        activeChecklist={activeChecklist}
+                        setActiveChecklist={setActiveChecklist}
+                    />
+                )}
 
                 <MultiChecklistItems
-                    activeType={activeType}
-                    loading={loading}
-                    checklists={checklists}
+                    items={checklistItems}
                     handleCheckChange={handleCheckChange}
                 />
             </Stack>
