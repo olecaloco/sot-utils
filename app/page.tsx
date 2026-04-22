@@ -16,6 +16,7 @@ import {
 
 import { Link } from "@/components/common/Link";
 import { UtilCard } from "@/components/common/UtilCard";
+import { AccountButtons } from "@/components/AccountButtons";
 
 export default async function Home() {
     return (
@@ -98,21 +99,7 @@ export default async function Home() {
                 </SignInButton>
             </Show>
             <Show when="signed-in">
-                <Button
-                    LinkComponent={Link}
-                    href="/portal"
-                    endIcon={<ArrowRightIcon />}
-                    sx={{
-                        ".MuiButton-icon": {
-                            transition: "all 150ms ease-in-out",
-                        },
-                        ":hover .MuiButton-icon": {
-                            ml: 2,
-                        },
-                    }}
-                >
-                    Go to Admin
-                </Button>
+                <AccountButtons />
             </Show>
         </Stack>
     );
