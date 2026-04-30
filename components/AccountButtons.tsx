@@ -25,12 +25,12 @@ const PortalButton = () => (
 
 const NotYouButton = ({ name }: { name?: string }) => (
     <SignOutButton>
-        <a
-            className="text-zinc-300 text-sm underline underline-offset-4"
-            href="#"
+        <Button
+            size={"small"}
+            className="normal-case cursor-pointer text-zinc-300 underline underline-offset-4"
         >
             Not {name}? Change account
-        </a>
+        </Button>
     </SignOutButton>
 );
 

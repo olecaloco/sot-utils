@@ -80,24 +80,6 @@ export default async function Home() {
                 />
             </Grid>
 
-            <Show when="signed-out">
-                <SignInButton>
-                    <Button
-                        LinkComponent={"a"}
-                        endIcon={<ArrowRightIcon />}
-                        sx={{
-                            ".MuiButton-icon": {
-                                transition: "all 150ms ease-in-out",
-                            },
-                            ":hover .MuiButton-icon": {
-                                ml: 2,
-                            },
-                        }}
-                    >
-                        <span>Go to Admin</span>
-                    </Button>
-                </SignInButton>
-            </Show>
             <Show when="signed-in">
                 <AccountButtons />
             </Show>
